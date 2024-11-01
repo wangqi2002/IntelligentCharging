@@ -7,6 +7,7 @@ export default {
   qrLink: "http://plat.trytowish.cn/",
   // #ifdef MP-WEIXIN
   appid: "wx66a19ee384891552", //微信测试
+  // appid: "wx54163a3a6b4bfbc6", //微信测试
   // #endif
   // #ifdef MP-ALIPAY
   appid: "2021004128601128", //支付宝测试

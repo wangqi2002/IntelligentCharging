@@ -1,5 +1,5 @@
 {
-    "name" : "闪电",
+    "name" : "智充",
     "appid" : "__UNI__B0A0BC2",
     "description" : "",
     "versionName" : "4.2.7",
@@ -16,7 +16,7 @@
     "mp-weixin" : {
         /* 小程序特有相关 */
         "usingComponents" : {},
-        "appid" : "wx54163a3a6b4bfbc6",
+        "appid" : "wx4f5327475ca9a979",
         "setting" : {
             "urlCheck" : false,
             "minified" : true,

@@ -1,5 +1,5 @@
 /**
- * 交♂易相关API
+ * 交易相关API
  */
 import { http, Method } from "@/utils/request.js";
 import { encodeURL } from "@/api/common";

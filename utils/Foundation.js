@@ -98,7 +98,7 @@ export function whetherNavigate(type = "default") {
     }
   } else {
     uni.switchTab({
-      url: "/pages/tabbar/home/index",
+      url: "/pages/tabbar/mine/my",
     });
   }
 }
