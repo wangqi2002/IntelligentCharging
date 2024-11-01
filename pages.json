@@ -14,6 +14,16 @@
             }
         },
         {
+            "path": "pages/tabbar/charge/charge",
+            "style": {
+                "navigationStyle": "custom",
+                // #ifdef MP-ALIPAY
+                "transparentTitle": "always",
+                // #endif
+                "enablePullDownRefresh": false
+            }
+        },
+        {
             "path": "pages/tabbar/mine/my",
             "style": {
                 "enablePullDownRefresh": true,
@@ -186,6 +196,12 @@
         "list": [
             {
                 "pagePath": "pages/tabbar/station/stationList",
+                "iconPath": "static/tabbar/home.png",
+                "selectedIconPath": "static/tabbar/home-s.png",
+                "text": "首页"
+            },
+            {
+                "pagePath": "pages/tabbar/charge/charge",
                 "iconPath": "static/tabbar/charging.png",
                 "selectedIconPath": "static/tabbar/charging-s.png",
                 "text": "充电"
