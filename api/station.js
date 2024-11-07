@@ -6,8 +6,8 @@ import { encodeURL } from "@/api/common";
 import api from "../config/api";
 
 /**
- * 获取购物车列表
- * @param show_type 要显示的类型 all：全部 checked：已选中的
+ * 获取充电站列表
+ * @param 
  */
 export function getStations(params) {
   let path = "/mp/v1/geo/geoStationList";

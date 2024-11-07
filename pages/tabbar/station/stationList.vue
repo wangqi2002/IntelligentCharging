@@ -336,11 +336,8 @@ export default {
 		},
 		handleClick(item) {
 			if (item.stationStatus == 50) {
-				// uni.navigateTo({
-				//   url: `/pages/station/index?id=${item.stationId}&d=${item.distance}`,
-				// });
 				uni.navigateTo({
-					url: `/pages/station/index?id=100&d=5`
+				  url: `/pages/station/index?id=${item.stationId}&d=${item.distance}`,
 				});
 			} else {
 				uni.showToast({
