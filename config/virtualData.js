@@ -4,7 +4,7 @@ let stationP = {
 		stationId: "站点ID",
 		stationName: "站点名称",
 		currentPrice: 0.29,
-		stationStstus: 50,
+		stationStatus: 50,
 		lon: 123.123,
 		lat: 124.124,
 		distance: 12,
@@ -61,7 +61,7 @@ let stationP = {
 		stationId: "站点ID",
 		stationName: "站点名称",
 		currentPrice: 0.32,
-		stationStstus: 50,
+		stationStatus: 50,
 		lon: 183.123,
 		lat: 166.124,
 		distance: 12,
@@ -118,7 +118,7 @@ let stationP = {
 		stationId: "站点ID",
 		stationName: "站点名称",
 		currentPrice: 0.25,
-		stationStstus: 50,
+		stationStatus: 50,
 		lon: 155.123,
 		lat: 104.124,
 		distance: 19,
@@ -175,7 +175,7 @@ let stationP = {
 		stationId: "站点ID",
 		stationName: "站点名称",
 		currentPrice: 0.21,
-		stationStstus: 50,
+		stationStatus: 50,
 		lon: 223.123,
 		lat: 224.124,
 		distance: 17,
@@ -232,7 +232,7 @@ let stationP = {
 		stationId: "站点ID",
 		stationName: "站点名称",
 		currentPrice: 0.33,
-		stationStstus: 50,
+		stationStatus: 50,
 		lon: 123.173,
 		lat: 114.134,
 		distance: 16,
@@ -289,7 +289,7 @@ let stationP = {
 		stationId: "站点ID",
 		stationName: "站点名称",
 		currentPrice: 0.29,
-		stationStstus: 50,
+		stationStatus: 50,
 		lon: 153.123,
 		lat: 154.124,
 		distance: 70,
@@ -346,7 +346,7 @@ let stationP = {
 		stationId: "站点ID",
 		stationName: "站点名称",
 		currentPrice: 0.39,
-		stationStstus: 50,
+		stationStatus: 50,
 		lon: 143.123,
 		lat: 120.124,
 		distance: 17,
@@ -399,84 +399,6 @@ let stationP = {
 		],
 		nearest: false,
 	}],
-	stationInfo: {
-		id: 1111111111111111,
-		stationId: "站点ID",
-		stationName: "站点名称",
-		currentPrice: 0.29,
-		stationStstus: 50,
-		address: "详细地址详细地址详细地址",
-		lon: 123.123,
-		lat: 124.124,
-		imgs: ["", ""],
-		totalFastGun: 20,
-		freeFastGun: 10,
-		totalGun: 30,
-		freeGun: 5,
-		pileList: [{
-			id:123456789,
-			equipmentId:"123456789",
-			name:"桩名",
-			equipmentType:1,
-			gunList:[{
-				id:1122334455,
-				connectorId:"1122334455",
-				connectorName:"充电接口名",
-				status:1,
-				connectorType:1,
-				parkStatus:10,
-				power:10,
-				chargingPer:0.8,
-				remainMinute:8,
-				startTm:Date()
-			},{
-				id:2233445566,
-				connectorId:"2233445566",
-				connectorName:"充电接口名",
-				status:1,
-				connectorType:1,
-				parkStatus:10,
-				power:10,
-				chargingPer:0.8,
-				remainMinute:8,
-				startTm:Date()
-			}]
-		},{
-			id:234567890,
-			equipmentId:"234567890",
-			name:"桩名",
-			equipmentType:1,
-			gunList:[{
-				id:1122334455,
-				connectorId:"1122334455",
-				connectorName:"充电接口名",
-				status:1,
-				connectorType:1,
-				parkStatus:10,
-				power:10,
-				chargingPer:0.8,
-				remainMinute:8,
-				startTm:Date()
-			},{
-				id:2233445566,
-				connectorId:"2233445566",
-				connectorName:"充电接口名",
-				status:1,
-				connectorType:1,
-				parkStatus:10,
-				power:10,
-				chargingPer:0.8,
-				remainMinute:8,
-				startTm:Date()
-			}]
-		}],
-		priceList: [],
-		attactInfo: "运维信息",
-		stationPhone: "17711177777",
-		servicePhone: "16611661166",
-		platType: 1,
-		busineHours: "营业时间描述"
-	},
 	cities: [{
 			label: "广州市",
 			value: {
@@ -542,6 +464,103 @@ let stationP = {
 	}]
 }
 
+let stationIndexP = {
+	id: 1111111111111111,
+	stationId: "站点ID",
+	stationName: "站点名称",
+	currentPrice: 0.29,
+	stationStatus: 50,
+	address: "详细地址详细地址详细地址",
+	lon: 123.123,
+	lat: 124.124,
+	imgs: ["", ""],
+	totalFastGun: 20,
+	freeFastGun: 10,
+	totalGun: 30,
+	freeGun: 5,
+	pileList: [{
+		id: 123456789,
+		equipmentId: "123456789",
+		name: "桩名",
+		equipmentType: 1,
+		gunList: [{
+			id: 1122334455,
+			connectorId: "1122334455",
+			connectorName: "充电接口名",
+			status: 1,
+			connectorType: 1,
+			parkStatus: 10,
+			power: 10,
+			chargingPer: 0.8,
+			remainMinute: 8,
+			startTm: Date()
+		}, {
+			id: 2233445566,
+			connectorId: "2233445566",
+			connectorName: "充电接口名",
+			status: 1,
+			connectorType: 1,
+			parkStatus: 10,
+			power: 10,
+			chargingPer: 0.8,
+			remainMinute: 8,
+			startTm: Date()
+		}]
+	}, {
+		id: 234567890,
+		equipmentId: "234567890",
+		name: "桩名",
+		equipmentType: 1,
+		gunList: [{
+			id: 1122334455,
+			connectorId: "1122334455",
+			connectorName: "充电接口名",
+			status: 1,
+			connectorType: 1,
+			parkStatus: 10,
+			power: 10,
+			chargingPer: 0.8,
+			remainMinute: 8,
+			startTm: Date()
+		}, {
+			id: 2233445566,
+			connectorId: "2233445566",
+			connectorName: "充电接口名",
+			status: 1,
+			connectorType: 1,
+			parkStatus: 10,
+			power: 10,
+			chargingPer: 0.8,
+			remainMinute: 8,
+			startTm: Date()
+		}]
+	}],
+	priceList: [{
+		startTm: "08:00",
+		endTm: "20:00",
+		servicePrice: 10,
+		elecPrice: 1,
+		remark: "101010101"
+	}, {
+		startTm: "00:00",
+		endTm: "08:00",
+		servicePrice: 15,
+		elecPrice: 0.5,
+		remark: "00000000"
+	}, {
+		startTm: "20:00",
+		endTm: "00:00",
+		servicePrice: 15,
+		elecPrice: 0.5,
+		remark: "00000000"
+	}],
+	attactInfo: "运维信息",
+	stationPhone: "17711177777",
+	servicePhone: "16611661166",
+	platType: 1,
+	busineHours: "营业时间描述"
+};
+
 let myP = {
 	userInfo: {
 		uid: 11111,
@@ -572,7 +591,84 @@ let myP = {
 	token: "QQYjtAxrZh2MIocSkjXEipSqMfvQa4bM",
 };
 
+let chargingP = {
+	PrepareChargingVo: {
+		serialVersionUID: 11111111,
+		stationName: "",
+		stationId: "",
+		equipmentId: "",
+		type: 1,
+		power: 200,
+		status: 1,
+		startChargeSeq: "xxxxxxxxxxxxx",
+		priceList: [{
+			startTm: "08:00",
+			endTm: "20:00",
+			servicePrice: 10,
+			elecPrice: 1,
+			remark: "101010101"
+		}, {
+			startTm: "00:00",
+			endTm: "08:00",
+			servicePrice: 15,
+			elecPrice: 0.5,
+			remark: "00000000"
+		}, {
+			startTm: "20:00",
+			endTm: "00:00",
+			servicePrice: 15,
+			elecPrice: 0.5,
+			remark: "00000000"
+		}],
+		plateNo: "K.5N221"
+	},
+	orderInfoVo: {
+		stationId: '11010810001',
+		baseOperatorId: 'MA80GFQM8',
+		startChargeSeq: 'MA01D1QR8946841013052518400',
+		connectorId: '2411010810000101',
+		startChargeSeqStat: 1,
+		userId: 2,
+		startTime: '2024-01-22 16:09:15',
+		endTime: '2024-01-22 16:09:42',
+		totalPower: 0.54,
+		totalElecMoney: 0.11,
+		totalServiceMoney: 0.33,
+		totalMoney: 0.44,
+		realPayMoney: 0.44,
+		stopReason: 65,
+		stopFailReason: 0,
+		sumPeriod: 1,
+		chargeDetail: 0,
+		carVin: 'TRLTOZLGSYQFN0FSD',
+		plateNo: '',
+		succStat: 0,
+		billType: 0,
+		soc: 32.00,
+		payState: 1,
+		remark: '',
+		priceInfo: [{
+			StartTime: "000000",
+			ElecPrice: 1.0000,
+			SevicePrice: 1.0000,
+			PriceType: 2
+		}],
+		payPlat: '',
+		transactionId: '',
+		delFlag: 0,
+		updateTime: '2024-01-22 16:09:44',
+		createTime: '2024-01-22 16:09:16',
+		tenantId: '000000',
+		currentA: 0.00,
+		voltageA: 0.00,
+		chargeType: 1,
+		chargeMoney: 0.00
+	}
+}
+
 export {
 	stationP,
-	myP
+	stationIndexP,
+	myP,
+	chargingP,
 }

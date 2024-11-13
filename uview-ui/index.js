@@ -20,7 +20,7 @@ function wranning(str) {
 // try {
 // 	vuexStore = require("@/store/$u.mixin.js");
 // } catch (e) {
-// 	//TODO handle the exception
+// 	//handle the exception
 // }
 
 // post类型对象参数转为get类型url参数

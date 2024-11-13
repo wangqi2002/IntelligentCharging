@@ -23,7 +23,7 @@
 				</view>
 
 				<!-- 价格 -->
-				<PriceCom :stationData="stationInfo" :currentTimeIndex="curnetPrice.currentTimeIndex" />
+				<!-- <PriceCom :stationData="stationInfo" :currentTimeIndex="curnetPrice.currentTimeIndex" /> -->
 
 				<!-- 枪 -->
 				<ConnectorCom :stationData="stationInfo" />
@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import { stationIndexP } from '@/config/virtualData.js';
 /************接口API***************/
 import { getStation } from '@/api/station.js';
 import { mpScan, serviceCall } from '@/utils/tools.js';
@@ -99,6 +100,7 @@ export default {
 		let _this = this;
 		uni.getSystemInfo({
 			success: function (res) {
+				console.log('station-index-getSystemInfo', res);
 				// res - 各种参数
 				let bottom = uni.createSelectorQuery().select('.page-bottom');
 				bottom
@@ -115,6 +117,7 @@ export default {
 		});
 	},
 	onLoad(options) {
+		console.log('station-index-onload', options);
 		this.routerVal = options;
 		// #ifdef MP-WEIXIN
 		uni.showShareMenu({
@@ -122,9 +125,6 @@ export default {
 			menus: ['shareAppMessage', 'shareTimeline']
 		});
 		// #endif
-		if (this.$options.filters.isLogin('auth')) {
-			this.init(this.routerVal.id);
-		}
 	},
 	onShow() {
 		if (this.$options.filters.isLogin('auth')) {
@@ -142,32 +142,23 @@ export default {
 				longitude: this.stationInfo.lon,
 				success(res) {
 					// 打开成功
+					console.log('打开成功');
 				}
 			});
 		},
-		share() {
-			return `/pages/station/inde?id=${this.routerVal.id}&goodsId=${this.routerVal.goodsId}`;
-		},
-		/**
-		 * 循环出当前促销是否为空
-		 */
-		countPromotion() {
-			return count;
-		},
-		/**
-		 * 初始化信息
-		 */
-		async init(id, distance, distributionId = '') {},
 		/**
 		 * 刷新枪状态
 		 */
 		async refreshConnector(id) {
 			this.loading = true;
 			let response = await getStation(id);
-			this.stationInfo = response.data.data;
+
+			this.stationInfo = stationIndexP; //测试数据
+
+			// this.stationInfo = response.data.data;
 			this.stationInfo.lon = Number(this.stationInfo.lon);
 			this.stationInfo.lat = Number(this.stationInfo.lat);
-			if (response.data.code != 200) {
+			/* if (response.data.code != 200) {
 				uni.navigateBack({
 					complete: () => {
 						uni.showToast({
@@ -177,13 +168,14 @@ export default {
 						});
 					}
 				});
-			}
+			} */
 
 			let _this = this;
 			// 计算距离
 			uni.getLocation({
 				type: 'gcj02', // 默认为 wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标
 				success: async function (res) {
+					console.log('station-index-getLocation', res);
 					const lat = parseFloat(res.latitude);
 					const lon = parseFloat(res.longitude);
 					while (_this.stationInfo.lon == null) {
@@ -192,7 +184,7 @@ export default {
 					_this.stationDistance = Math.round(_this.$options.filters.calcDistance(lon, lat, _this.stationInfo.lon, _this.stationInfo.lat) / 100) / 10;
 				},
 				fail: function (res) {
-					console.log(res);
+					console.log('err-station-index-getLocation', res);
 				}
 			});
 

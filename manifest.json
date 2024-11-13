@@ -40,5 +40,19 @@
         "component2" : true,
         "darkmode" : true,
         "themeLocation" : "theme.json"
+    },
+    "app-plus" : {
+        "modules" : {
+            "Geolocation" : {}
+        },
+        "distribute" : {
+            "sdkConfigs" : {
+                "geolocation" : {
+                    "system" : {
+                        "__platform__" : [ "ios", "android" ]
+                    }
+                }
+            }
+        }
     }
 }
