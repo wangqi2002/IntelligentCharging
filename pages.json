@@ -173,6 +173,13 @@
                             }
                         }
                     }
+                },
+                {
+                	"path" : "yaokong/yaokong",
+                	"style" : 
+                	{
+                		"navigationBarTitleText" : ""
+                	}
                 }
             ]
         }
@@ -201,7 +208,7 @@
                 "text": "首页"
             },
             {
-                "pagePath": "pages/tabbar/charge/charge",
+                "pagePath": "pages/station/index",
                 "iconPath": "static/tabbar/charging.png",
                 "selectedIconPath": "static/tabbar/charging-s.png",
                 "text": "充电"

@@ -397,35 +397,6 @@ export default {
 		// 退出页面时，清除轮询任务
 		this.orderInfoUpdateTimeout && clearTimeout(this.orderInfoUpdateTimeout);
 	},
-	mounted() {
-		const { windowHeight } = uni.getSystemInfoSync();
-		let bottomHeight = 0;
-		let topHeight = 0;
-		let _this = this;
-		uni.getSystemInfo({
-			success: function (res) {
-				// res - 各种参数
-				let bottom = uni.createSelectorQuery().select('.page-bottom');
-				bottom
-					.boundingClientRect(function (data) {
-						if (data && data.height) {
-							//data - 各种参数
-							bottomHeight = data.height; // 获取元素宽度
-
-							_this.productRefHeight = windowHeight - bottomHeight - topHeight + 'px';
-						}
-					})
-					.exec();
-				let top = uni.createSelectorQuery().select('.header');
-				top.boundingClientRect(function (data) {
-					if (data && data.height) {
-						//data - 各种参数
-						topHeight = data.height; // 获取元素宽度
-					}
-				}).exec();
-			}
-		});
-	},
 	onLoad(options) {
 		this.routerVal = options;
 		// #ifdef MP-WEIXIN
@@ -456,6 +427,35 @@ export default {
 		} else {
 			this.$options.filters.navigateToLogin('navigateTo', true);
 		}
+	},
+	mounted() {
+		const { windowHeight } = uni.getSystemInfoSync();
+		let bottomHeight = 0;
+		let topHeight = 0;
+		let _this = this;
+		uni.getSystemInfo({
+			success: function (res) {
+				// res - 各种参数
+				let bottom = uni.createSelectorQuery().select('.page-bottom');
+				bottom
+					.boundingClientRect(function (data) {
+						if (data && data.height) {
+							//data - 各种参数
+							bottomHeight = data.height; // 获取元素宽度
+
+							_this.productRefHeight = windowHeight - bottomHeight - topHeight + 'px';
+						}
+					})
+					.exec();
+				let top = uni.createSelectorQuery().select('.header');
+				top.boundingClientRect(function (data) {
+					if (data && data.height) {
+						//data - 各种参数
+						topHeight = data.height; // 获取元素宽度
+					}
+				}).exec();
+			}
+		});
 	},
 	methods: {
 		updateCountStart() {
@@ -650,22 +650,21 @@ export default {
 			});
 		},
 		async getChargeInfo() {
-			// if (this.orderInfo.status == 3 || this.orderInfo.status == 99) {
 			// let res = await getOrderDetail(this.orderInfo.startChargeSeq);
 			// 测试数据
 			let res = { data: { code: 200, data: {} } };
 			res.data.data = chargingP.orderInfoVo;
 			if (res.data.code == 200 && res.data.data != null) {
 				this.equipmentInfo = res.data.data;
-				this.equipmentInfo.status = this.equipmentInfo.startChargeSeqStat;
 				console.log('getOrderDetail', this.equipmentInfo);
-				// this.equipmentInfo.chargeDurInt = parseInt(this.equipmentInfo.chargeDur)
+				this.equipmentInfo.chargeDurInt = parseInt(this.equipmentInfo.chargeDur);
 				// 云快充soc是0-1 星云是0-100
 				this.$set(this.equipmentInfo, 'soc', this.equipmentInfo.soc);
 				this.$set(this.equipmentInfo, 'currentP', this.equipmentInfo.currentP ? parseInt(this.equipmentInfo.currentP / 1000) : 0);
 				if ([1, 2].includes(this.equipmentInfo.status)) {
 					this.updateChargeDur();
 				} else {
+					
 					this.clearChargeDurTimer();
 				}
 				/*

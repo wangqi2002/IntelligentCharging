@@ -23,7 +23,7 @@
 				</view>
 
 				<!-- 价格 -->
-				<!-- <PriceCom :stationData="stationInfo" :currentTimeIndex="curnetPrice.currentTimeIndex" /> -->
+				<PriceCom :stationData="stationInfo" :currentTimeIndex="curnetPrice.currentTimeIndex" />
 
 				<!-- 枪 -->
 				<ConnectorCom :stationData="stationInfo" />
