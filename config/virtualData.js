@@ -433,15 +433,15 @@ let stationP = {
 		lon: 21.742,
 	},
 	swiperlist: [{
-			image: '/static/virtual/swiper1.jpg',
+			image: '/static/virtual/swiper1.webp',
 			title: 'one'
 		},
 		{
-			image: '/static/virtual/swiper2.jpg',
+			image: '/static/virtual/swiper2.webp',
 			title: 'two'
 		},
 		{
-			image: '/static/virtual/swiper3.jpg',
+			image: '/static/virtual/swiper3.webp',
 			title: 'three'
 		}
 	],

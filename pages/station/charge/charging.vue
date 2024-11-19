@@ -129,6 +129,15 @@
 							</view>
 						</view>
 					</view>
+
+					<u-modal
+						show-cancel-button
+						v-model="yaokongChargeShow"
+						@confirm="yaokongCharge"
+						:confirm-color="lightColor"
+						:async-close="true"
+						:content="'自动充电失败，是否需要手动遥控充电'"
+					></u-modal>
 				</view>
 
 				<!-- 充电中 -->
@@ -347,6 +356,7 @@ export default {
 	data() {
 		return {
 			endChargeShow: false,
+			yaokongChargeShow: false,
 			lightColor: this.$lightColor, //高亮颜色
 			equipmentInfo: { soc: 0, status: 0 },
 			stationInfo: { priceList: [] },
@@ -596,6 +606,32 @@ export default {
 		},
 
 		charge() {
+			// startCharge().then((res)=>{
+			// 	res = { data: { data: {}, code: 200 } };
+			// 	if (res.data.code == 200) {
+			// 		this.orderInfo = Object.assign({ startChargeSeq: res.data.data.startChargeSeq }, { status: 3 });
+			// 		this.$refs.uTips.show({ title: '启动成功', type: 'success' });
+			// 		// 开始轮询状态变化
+			// 		this.getChargeInfo();
+			// 	} else {
+			// 		this.$refs.uTips.show({ title: res.data.msg, type: 'error' });
+			// 		this.orderInfo.status = 2;
+			// 	}
+			// })
+			let res = { data: { data: {}, code: 500 } };
+			res.data.data = chargingP.orderInfoVo;
+			if (res.data.code == 200) {
+				this.orderInfo = Object.assign({ startChargeSeq: res.data.data.startChargeSeq }, { status: 3 });
+				this.$refs.uTips.show({ title: '启动成功', type: 'success' });
+				// 开始轮询状态变化
+				this.getChargeInfo();
+			} else {
+				this.$refs.uTips.show({ title: res.data.msg, type: 'error' });
+				this.yaokongChargeShow = true;
+				this.orderInfo.status = 2;
+			}
+		},
+		/* charge() {
 			// 点击先进充电中状态等待接口返回，以防止多次点击
 			this.$set(this.orderInfo, 'status', 3);
 			this.$set(this.equipmentInfo, 'status', 1);
@@ -621,7 +657,7 @@ export default {
 					this.orderInfo.status = 2;
 				}
 			});
-		},
+		}, */
 		requestNotify(startChargeSeq) {
 			let tmplIds = config.wxNotifyKey;
 			uni.requestSubscribeMessage({
@@ -656,7 +692,7 @@ export default {
 			res.data.data = chargingP.orderInfoVo;
 			if (res.data.code == 200 && res.data.data != null) {
 				this.equipmentInfo = res.data.data;
-				console.log('getOrderDetail', this.equipmentInfo);
+				// console.log('getOrderDetail', this.equipmentInfo);
 				this.equipmentInfo.chargeDurInt = parseInt(this.equipmentInfo.chargeDur);
 				// 云快充soc是0-1 星云是0-100
 				this.$set(this.equipmentInfo, 'soc', this.equipmentInfo.soc);
@@ -664,7 +700,6 @@ export default {
 				if ([1, 2].includes(this.equipmentInfo.status)) {
 					this.updateChargeDur();
 				} else {
-					
 					this.clearChargeDurTimer();
 				}
 				/*
@@ -699,6 +734,23 @@ export default {
 				}
 				this.updateNavigationBarTitle();
 			}
+		},
+		yaokongCharge() {
+			let that = this;
+			uni.navigateTo({
+				url: `/pages/station/yaokong/yaokong?id=${this.routerVal}`,
+				events: {
+					// 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
+					acceptCharging: function (data) {
+						console.log('---', data);
+					}
+				},
+				success: function (res) {
+					// 通过eventChannel向被打开页面传送数据
+					res.eventChannel.emit('acceptChargingPage', { data: that.equipmentInfo });
+				}
+			});
+			this.yaokongChargeShow = false;
 		},
 		endCharge() {
 			this.endChargeShow = false;

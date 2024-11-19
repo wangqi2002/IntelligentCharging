@@ -208,7 +208,7 @@
                 "text": "首页"
             },
             {
-                "pagePath": "pages/station/index",
+                "pagePath": "pages/tabbar/charge/charge",
                 "iconPath": "static/tabbar/charging.png",
                 "selectedIconPath": "static/tabbar/charging-s.png",
                 "text": "充电"

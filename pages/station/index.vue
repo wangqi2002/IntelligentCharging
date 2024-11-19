@@ -39,11 +39,8 @@
 					</view>
 				</view>
 				<!-- 扫码充电 -->
-				<view class="detail-btn">
-					<view class="button scan" @click="scan()">
-						<img class="list_img" src="/static/map/scan.png" alt />
-						扫码充电
-					</view>
+				<view class="detail-tip">
+					选择合适位置的充电枪进行充电
 				</view>
 			</view>
 		</view>
@@ -55,7 +52,7 @@
 import { stationIndexP } from '@/config/virtualData.js';
 /************接口API***************/
 import { getStation } from '@/api/station.js';
-import { mpScan, serviceCall } from '@/utils/tools.js';
+import { serviceCall } from '@/utils/tools.js';
 import config from '@/config/config';
 /************组件***************/
 import PriceCom from './components/-price'; //价格组件
@@ -265,9 +262,6 @@ export default {
 				this.tabScrollTop = this.scrollArr[id - 1];
 			});
 		},
-		scan() {
-			mpScan();
-		},
 		imgPreview(index) {
 			uni.previewImage({
 				current: index,
@@ -281,30 +275,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.detail-btn {
-	display: flex;
-	align-items: center;
-
-	.button.scan {
-		flex: 1;
-		width: 100%;
-		margin: 0 10rpx;
-		background-image: linear-gradient(230deg, #00a5ff 7%, #0089c9 100%);
-		box-shadow: 0 1px 12px 0 #0089c980;
-		border-radius: 20px;
-		font-size: 28rpx;
-		line-height: 80rpx;
-		color: #ffffff;
-		text-align: center;
-		margin: 0 16rpx;
-
-		img {
-			width: 40rpx;
-			height: 40rpx;
-			vertical-align: text-bottom;
-			margin-right: 16rpx;
-		}
-	}
+.detail-tip {
+	text-align: center;
+	flex: 1;
+	line-height: calc(120rpx + constant(safe-area-inset-bottom));
+	line-height: calc(120rpx + env(safe-area-inset-bottom));
+	color: dimgray;
 }
 
 .header,
@@ -363,10 +339,6 @@ export default {
 				margin: 4rpx 0;
 			}
 		}
-	}
-
-	> .detail-btn {
-		flex: 1.5;
 	}
 }
 
@@ -609,12 +581,6 @@ export default {
 
 		> .icon-btn > .icon-btn-item {
 			color: #ffffff;
-		}
-
-		.detail-btn > .to-scan {
-			background-image: linear-gradient(230deg, #00a5ff 7%, #0089c9 100%);
-			border: 1px solid #f6f6f720;
-			box-shadow: none;
 		}
 	}
 
