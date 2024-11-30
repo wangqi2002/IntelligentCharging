@@ -4,7 +4,6 @@ from sqlalchemy.dialects.mysql import SMALLINT, DECIMAL, BIGINT, INTEGER, TINYIN
 
 db = SQLAlchemy()
 
-
 class OmindApp(db.Model):
     __tablename__ = 'omind_app'
 
@@ -18,7 +17,6 @@ class OmindApp(db.Model):
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"))
     update_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     del_flag = Column(TINYINT(3), nullable=False, server_default=text("'0'"))
-
 
 class OmindBill(db.Model):
     __tablename__ = 'omind_bill'
@@ -74,7 +72,6 @@ class OmindBill(db.Model):
     charge_type = Column(TINYINT(1), nullable=False, server_default=text("'1'"), comment='充电类型 1、充满;2、按金额充电')
     charge_money = Column(DECIMAL(6, 2), nullable=False, server_default=text("'0.00'"), comment='用户预计充电金额')
 
-
 class OmindConnector(db.Model):
     __tablename__ = 'omind_connector'
     __table_args__ = {'comment': '充电设备接口信息表'}
@@ -114,7 +111,6 @@ class OmindConnector(db.Model):
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
 
-
 class OmindEquipment(db.Model):
     __tablename__ = 'omind_equipment'
     __table_args__ = {'comment': '充电设备信息表'}
@@ -150,7 +146,6 @@ class OmindEquipment(db.Model):
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
 
-
 class OmindFeedback(db.Model):
     __tablename__ = 'omind_feedback'
     __table_args__ = {'comment': '用户反馈表'}
@@ -169,7 +164,6 @@ class OmindFeedback(db.Model):
     update_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"), comment='更新时间')
     create_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
-
 
 class OmindOperator(db.Model):
     __tablename__ = 'omind_operator'
@@ -200,7 +194,6 @@ class OmindOperator(db.Model):
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
 
-
 class OmindPrice(db.Model):
     __tablename__ = 'omind_price'
     __table_args__ = {'comment': '充电价格表'}
@@ -217,7 +210,6 @@ class OmindPrice(db.Model):
     remark = Column(VARCHAR(128), nullable=False, server_default=text("''"), comment='备注')
     del_flag = Column(TINYINT(3), nullable=False, server_default=text("'0'"), comment='数据状态:0、正常;1、删除')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
-
 
 class OmindStation(db.Model):
     __tablename__ = 'omind_station'
@@ -276,7 +268,6 @@ class OmindStation(db.Model):
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
 
-
 class OmindStationImage(db.Model):
     __tablename__ = 'omind_station_images'
     __table_args__ = {'comment': '充电站图片表'}
@@ -293,7 +284,6 @@ class OmindStationImage(db.Model):
     update_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"), comment='更新时间')
     create_time = Column(DateTime, nullable=False, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
-
 
 class OmindUser(db.Model):
     __tablename__ = 'omind_user'
@@ -331,7 +321,6 @@ class OmindUser(db.Model):
     update_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"), comment='更新时间')
     create_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
-
 
 class OmindUserCar(db.Model):
     __tablename__ = 'omind_user_car'

@@ -2,7 +2,7 @@ mysql_host = "127.0.0.1"  # 表示本地的地址
 mysql_port = 3306    # 端口号
 mysql_user = "root"   # mysql用户名
 mysql_ps = "123456"  # mysql密码
-mysql_database = "roomZ"  # mysql中创建的数据库名称
+mysql_database = "zhichong"  # mysql中创建的数据库名称
 
 
 class Config():

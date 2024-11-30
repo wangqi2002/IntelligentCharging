@@ -1,6 +1,7 @@
 from flask import Flask
 from model.models import db
 from config import Config
+from web.user import user
 
 
 def create_app():
@@ -10,7 +11,6 @@ def create_app():
     # 查询时会显示原始SQL语句
     app.config['SQLALCHEMY_ECHO'] = False
     # 注册蓝图
-    from web.user import user
     app.register_blueprint(user)
     db.init_app(app)
     with app.app_context():
