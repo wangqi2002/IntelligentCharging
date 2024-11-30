@@ -130,14 +130,11 @@
 						</view>
 					</view>
 
-					<u-modal
-						show-cancel-button
-						v-model="yaokongChargeShow"
-						@confirm="yaokongCharge"
-						:confirm-color="lightColor"
-						:async-close="true"
-						:content="'自动充电失败，是否需要手动遥控充电'"
-					></u-modal>
+					<u-modal show-cancel-button v-model="yaokongChargeShow" @confirm="yaokongCharge" :confirm-color="lightColor" :async-close="true">
+						<view class="slot-content">
+							<rich-text :nodes="contentTip" style="text-align: center;"></rich-text>
+						</view>
+					</u-modal>
 				</view>
 
 				<!-- 充电中 -->
@@ -357,6 +354,10 @@ export default {
 		return {
 			endChargeShow: false,
 			yaokongChargeShow: false,
+			contentTip: `
+					自动充电失败<br>
+					是否启用手动遥控充电
+				`,
 			lightColor: this.$lightColor, //高亮颜色
 			equipmentInfo: { soc: 0, status: 0 },
 			stationInfo: { priceList: [] },

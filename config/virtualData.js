@@ -599,24 +599,24 @@ let chargingP = {
 		equipmentId: "",
 		type: 1,
 		power: 200,
-		status: 2,
+		status: 4,
 		startChargeSeq: "xxxxxxxxxxxxx",
 		priceList: [{
 			startTm: "08:00",
 			endTm: "20:00",
-			servicePrice: 10,
+			servicePrice: 2,
 			elecPrice: 1,
 			remark: "101010101"
 		}, {
 			startTm: "00:00",
 			endTm: "08:00",
-			servicePrice: 15,
+			servicePrice: 5,
 			elecPrice: 0.5,
 			remark: "00000000"
 		}, {
 			startTm: "20:00",
 			endTm: "00:00",
-			servicePrice: 15,
+			servicePrice: 5,
 			elecPrice: 0.5,
 			remark: "00000000"
 		}],
@@ -627,7 +627,7 @@ let chargingP = {
 		baseOperatorId: 'MA80GFQM8',
 		startChargeSeq: 'MA01D1QR8900000000000000000',
 		connectorId: '2411010810000101',
-		status: 2,
+		status: 4,
 		userId: 2,
 		startTime: '2024-01-22 16:09:15',
 		endTime: '2024-01-22 16:09:42',
