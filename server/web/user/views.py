@@ -1,35 +1,226 @@
 from . import user
-from flask import request, jsonify
-from model.models import db, OmindApp
+from flask import request, jsonify, Flask
+from model.models import db, OmindUser
+from utils import util
+
+app = Flask(__name__)
+
+@user.route('/user/register', methods=['POST'])
+def register():
+    us_data = request.get_json()
+    try:
+        new_us = OmindUser(username=us_data['username'], email=us_data['email'])
+        db.session.add(new_us)
+        db.session.commit()  # 提交事务以保存到数据库
+        status_code = 200
+        result = {
+            "msg": "Add successful.",
+            "code": status_code
+        }
+    except:
+        db.session.rollback()
+        status_code = 400
+        result = {
+            "msg": "Add failed! Please check the query data!",
+            "code": status_code
+        }
+    return jsonify(result), status_code
+
+# 短信登陆
+@user.route('/user/smsLogin', methods=['POST'])
+def smsLogin():
+    us_data = request.get_json()
+    try:
+        us_account = us_data['account']
+        us_captcha = us_data['captcha']
+        us_data = OmindUser.query.filter_by(account=us_account)
+        if not us_data:
+            status_code = 400
+            result = {
+                "msg": "Find failed! Please check the username.",
+                "code": status_code
+            }
+        else:
+            if us_captcha == app.config['CAPTCHA']:
+                status_code = 200
+                result = {
+                    "msg": "login successful.",
+                    "code": status_code
+                }
+            else:
+                status_code = 401
+                result = {
+                    "msg": "captcha failed! Please check the captcha.",
+                    "code": status_code
+                }
+    except:
+        db.session.rollback()
+        status_code = 402
+        result = {
+            "msg": "verify failed!",
+            "code": status_code
+        }
+    return jsonify(result), status_code
 
 
-# 增
-# @user.route('/add_us_data_by_json', methods=['POST'])
-# def add_us_data_by_json():
-#     add_us_data = request.get_json()
-#     try:
-#         new_user = User(username=add_us_data['username'], email=add_us_data['email'])
-#         db.session.add(new_user)
-#         db.session.commit()  # 提交事务以保存到数据库
-#         status_code = 200
-#         result = {
-#             "msg": "Add successful.",
-#             "code": status_code
-#         }
-#     except:
-#         db.session.rollback()
-#         status_code = 400
-#         result = {
-#             "msg": "Add failed! Please check the query data.",
-#             "code": status_code
-#         }
-#     return jsonify(result), status_code
-#
-#
+# 账号密码登陆
+@user.route('/user/accountLogin', methods=['POST'])
+def accountLogin():
+    us_data = request.get_json()
+    try:
+        us_account = us_data['account']
+        us_pass = us_data['pass']
+        us_data = OmindUser.query.filter_by(account=us_account)
+        if not us_data:
+            status_code = 400
+            result = {
+                "msg": "Find failed! Please check the account.",
+                "code": status_code
+            }
+        else:
+            if us_pass == us_data['pass']:
+                status_code = 200
+                result = {
+                    "msg": "login successful.",
+                    "code": status_code
+                }
+            else:
+                status_code = 401
+                result = {
+                    "msg": "password failed! Please check the password.",
+                    "code": status_code
+                }
+    except:
+        db.session.rollback()
+        status_code = 402
+        result = {
+            "msg": "verify failed!",
+            "code": status_code
+        }
+    return jsonify(result), status_code
+
+
+# 获取验证码
+@user.route('/user/sendCode/<string:phone>', methods=['GET'])
+def sendCode(phone):
+    us_data = OmindUser.query.filter_by(phone=phone)
+    if not us_data:
+        status_code = 400
+        result = {
+            "msg": "Query failed! Please check the phone number.",
+            "us_data": {},
+            "code": status_code
+        }
+    else:
+        # 调用验证码发送接口，目前无验证码发送接口，使用伪验证码替代
+        app.config['CAPTCHA']=util.v_code()
+        captcha=app.config['CAPTCHA']
+        status_code = 200
+        result = {
+            "msg": "captcha successful.",
+            "captcha": captcha,
+            "code": status_code
+        }
+    return jsonify(result), status_code
+
+
+# 账号密码登陆
+@user.route('/user/changeInfo', methods=['POST'])
+def changeInfo():
+    add_us_data = request.get_json()
+    try:
+        new_user = OmindUser(username=add_us_data['username'], email=add_us_data['email'])
+        db.session.add(new_user)
+        db.session.commit()  # 提交事务以保存到数据库
+        status_code = 200
+        result = {
+            "msg": "Add successful.",
+            "code": status_code
+        }
+    except:
+        db.session.rollback()
+        status_code = 400
+        result = {
+            "msg": "Add failed! Please check the query data.",
+            "code": status_code
+        }
+    return jsonify(result), status_code
+
+
+@user.route('/user/changePass', methods=['POST'])
+def changePass():
+    add_us_data = request.get_json()
+    try:
+        new_user = OmindUser(username=add_us_data['username'], email=add_us_data['email'])
+        db.session.add(new_user)
+        db.session.commit()  # 提交事务以保存到数据库
+        status_code = 200
+        result = {
+            "msg": "Add successful.",
+            "code": status_code
+        }
+    except:
+        db.session.rollback()
+        status_code = 400
+        result = {
+            "msg": "Add failed! Please check the query data.",
+            "code": status_code
+        }
+    return jsonify(result), status_code
+
+
+@user.route('/user/uploadAvatar', methods=['POST'])
+def uploadAvatar():
+    add_us_data = request.get_json()
+    try:
+        new_user = OmindUser(username=add_us_data['username'], email=add_us_data['email'])
+        db.session.add(new_user)
+        db.session.commit()  # 提交事务以保存到数据库
+        status_code = 200
+        result = {
+            "msg": "Add successful.",
+            "code": status_code
+        }
+    except:
+        db.session.rollback()
+        status_code = 400
+        result = {
+            "msg": "Add failed! Please check the query data.",
+            "code": status_code
+        }
+    return jsonify(result), status_code
+
+
+# 获取验证码
+@user.route('/user/info', methods=['GET'])
+def getInfo():
+    us_id = request.args.get("id", type=int)
+    us_data = OmindUser.query.get(us_id)
+    if not us_data:
+        status_code = 400
+        result = {
+            "msg": "Query failed! Please check the query username.",
+            "us_data": {},
+            "code": status_code
+        }
+    else:
+        us_data_get = {
+            "id": us_data.id,
+            "username": us_data.username,
+            "email": us_data.email
+        }
+        status_code = 200
+        result = {
+            "msg": "Query successful.",
+            "us_data": us_data_get,
+            "code": status_code
+        }
+    return jsonify(result), status_code
+
 # # 删
 # @user.route('/delete_us_data/<id>', methods=['DELETE'])
 # def delete_us_data(id):
-#     user = User.query.get(int(id))  # 通过 id 查询
+#     user = OmindUser.query.get(int(id))  # 通过 id 查询
 #     if user:
 #         db.session.delete(user)
 #         db.session.commit()  # 提交事务以删除记录
@@ -52,7 +243,7 @@ from model.models import db, OmindApp
 # @user.route('/up_us_data/<id>', methods=['PUT'])
 # def up_us_data(id):
 #     add_us_data = request.get_json()
-#     user = User.query.get(int(id))
+#     user = OmindUser.query.get(int(id))
 #     if user:
 #         user.email = add_us_data['email']
 #         user.username = add_us_data['username']
@@ -76,7 +267,7 @@ from model.models import db, OmindApp
 # @user.route('/get_data_by_us_name', methods=['GET'])
 # def get_data_by_us_name():
 #     us_id = request.args.get("id", type=int)
-#     us_data = User.query.get(us_id)
+#     us_data = OmindUser.query.get(us_id)
 #     if not us_data:
 #         status_code = 400
 #         result = {
