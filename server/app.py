@@ -6,4 +6,4 @@ app = create_app()
 CORS(app, supports_credentials=True)
 
 if __name__ == '__main__':
-    app.run(debug=False, host="0.0.0.0", port=5600)
+    app.run(debug=False, host="0.0.0.0", port=8089)

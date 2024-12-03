@@ -1,15 +1,14 @@
 from . import user
-from flask import request, jsonify, Flask
+from flask import request, jsonify
 from model.models import db, OmindUser
 from utils import util
-
-app = Flask(__name__)
+from store import globalfile
 
 @user.route('/user/register', methods=['POST'])
 def register():
     us_data = request.get_json()
     try:
-        new_us = OmindUser(username=us_data['username'], email=us_data['email'])
+        new_us = OmindUser(mobile=us_data['mobile'], email=us_data['email'])
         db.session.add(new_us)
         db.session.commit()  # 提交事务以保存到数据库
         status_code = 200
@@ -34,25 +33,29 @@ def smsLogin():
         us_account = us_data['account']
         us_captcha = us_data['captcha']
         us_data = OmindUser.query.filter_by(account=us_account)
-        if not us_data:
-            status_code = 400
-            result = {
-                "msg": "Find failed! Please check the username.",
-                "code": status_code
-            }
-        else:
-            if us_captcha == app.config['CAPTCHA']:
+        if us_captcha == globalfile.CAPTCHA:
+            if not us_data:
+                new_us = OmindUser(mobile=us_data['mobile'], password=us_data['password'])
+                db.session.add(new_us)
+                db.session.commit()  # 提交事务以保存到数据库
+                status_code = 200
+                result = {
+                    "msg": "register successful.",
+                    "code": status_code
+                }
+            else:
                 status_code = 200
                 result = {
                     "msg": "login successful.",
                     "code": status_code
                 }
-            else:
-                status_code = 401
-                result = {
-                    "msg": "captcha failed! Please check the captcha.",
-                    "code": status_code
-                }
+        else:
+            status_code = 401
+            result = {
+                "msg": "captcha failed! Please check the captcha.",
+                "code": status_code
+            }
+
     except:
         db.session.rollback()
         status_code = 402
@@ -101,20 +104,20 @@ def accountLogin():
 
 
 # 获取验证码
-@user.route('/user/sendCode/<string:phone>', methods=['GET'])
+@user.route('/user/sendCode', methods=['GET'])
 def sendCode(phone):
-    us_data = OmindUser.query.filter_by(phone=phone)
+    us_mobile = request.args.get("mobile", type=str)
+    us_data = OmindUser.query.get(us_mobile)
     if not us_data:
         status_code = 400
         result = {
             "msg": "Query failed! Please check the phone number.",
-            "us_data": {},
             "code": status_code
         }
     else:
         # 调用验证码发送接口，目前无验证码发送接口，使用伪验证码替代
-        app.config['CAPTCHA']=util.v_code()
-        captcha=app.config['CAPTCHA']
+        globalfile.update_var(util.v_code())
+        captcha=globalfile.CAPTCHA
         status_code = 200
         result = {
             "msg": "captcha successful.",
@@ -124,7 +127,7 @@ def sendCode(phone):
     return jsonify(result), status_code
 
 
-# 账号密码登陆
+# 修改个人信息
 @user.route('/user/changeInfo', methods=['POST'])
 def changeInfo():
     add_us_data = request.get_json()
@@ -146,7 +149,7 @@ def changeInfo():
         }
     return jsonify(result), status_code
 
-
+#修改密码
 @user.route('/user/changePass', methods=['POST'])
 def changePass():
     add_us_data = request.get_json()
@@ -168,7 +171,7 @@ def changePass():
         }
     return jsonify(result), status_code
 
-
+# 上传头像
 @user.route('/user/uploadAvatar', methods=['POST'])
 def uploadAvatar():
     add_us_data = request.get_json()
@@ -191,28 +194,23 @@ def uploadAvatar():
     return jsonify(result), status_code
 
 
-# 获取验证码
+# 获取个人信息
 @user.route('/user/info', methods=['GET'])
 def getInfo():
-    us_id = request.args.get("id", type=int)
-    us_data = OmindUser.query.get(us_id)
+    us_mobile = request.args.get("mobile", type=str)
+    us_data = OmindUser.query.filter_by(mobile=us_mobile)
+    print(us_mobile)
     if not us_data:
         status_code = 400
         result = {
-            "msg": "Query failed! Please check the query username.",
-            "us_data": {},
+            "msg": "Query failed! Please check the query mobile.",
             "code": status_code
         }
     else:
-        us_data_get = {
-            "id": us_data.id,
-            "username": us_data.username,
-            "email": us_data.email
-        }
         status_code = 200
         result = {
             "msg": "Query successful.",
-            "us_data": us_data_get,
+            "us_data": us_data,
             "code": status_code
         }
     return jsonify(result), status_code

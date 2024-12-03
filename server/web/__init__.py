@@ -11,7 +11,7 @@ def create_app():
     # 查询时会显示原始SQL语句
     app.config['SQLALCHEMY_ECHO'] = False
     # 注册蓝图
-    app.register_blueprint(user)
+    app.register_blueprint(user, url_prefix='/api/app')
     db.init_app(app)
     with app.app_context():
         db.create_all()
