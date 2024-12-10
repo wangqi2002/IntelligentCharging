@@ -1,21 +1,31 @@
 from . import car
 from flask import request, jsonify
 from model.models import db, OmindUserCar
+from utils import util
+from store import globalfile
 
 
 # 增
-@OmindUserCar.route('/car/create', methods=['POST'])
-def add_us_data_by_json():
-    add_us_data = request.get_json()
+@car.route('/car/create', methods=['POST'])
+def add_car():
+    r_data = request.get_json()
     try:
-        new_user = OmindUserCar(username=add_us_data['username'], email=add_us_data['email'])
-        db.session.add(new_user)
-        db.session.commit()  # 提交事务以保存到数据库
-        status_code = 200
-        result = {
-            "msg": "Add successful.",
-            "code": status_code
-        }
+        car_data = OmindUserCar.query.filter_by(plate_no=r_data['plate_no']).first()
+        if not car_data:
+            new_car = OmindUserCar(user_id=r_data['user_id'], plate_no=r_data['plate_no'],owner=r_data['owner'])
+            db.session.add(new_car)
+            db.session.commit()  # 提交事务以保存到数据库
+            status_code = 200
+            result = {
+                "msg": "Add successful.",
+                "code": status_code
+            }
+        else:
+            status_code = 401
+            result = {
+                "msg": "Add failed! Vehicle already exists",
+                "code": status_code
+            }
     except:
         db.session.rollback()
         status_code = 400
@@ -23,15 +33,16 @@ def add_us_data_by_json():
             "msg": "Add failed! Please check the query data.",
             "code": status_code
         }
-    return jsonify(result), status_code
+    return jsonify(result)
 
 
 # 删
-@OmindUserCar.route('/car/delete/<id>', methods=['DELETE'])
-def delete_us_data(id):
-    user = OmindUserCar.query.get(int(id))  # 通过 id 查询
-    if user:
-        db.session.delete(user)
+@car.route('/car/delete', methods=['POST'])
+def delete_car():
+    r_data = request.get_json()
+    car_data = OmindUserCar.query.filter_by(plate_no=r_data["plate_no"]).first()  # 通过 id 查询
+    if car_data:
+        db.session.delete(car_data)
         db.session.commit()  # 提交事务以删除记录
         status_code = 200
         result = {
@@ -45,17 +56,17 @@ def delete_us_data(id):
             "msg": "Delete failed! Please check the query data.",
             "code": status_code
         }
-    return jsonify(result), status_code
+    return jsonify(result)
 
 
 # 改
-@OmindUserCar.route('/car/changeIfon/<id>', methods=['PUT'])
-def up_us_data(id):
-    add_us_data = request.get_json()
-    user = OmindUserCar.query.get(int(id))
-    if user:
-        user.email = add_us_data['email']
-        user.username = add_us_data['username']
+@car.route('/car/changeInfo', methods=['POST'])
+def up_car():
+    r_data = request.get_json()
+    car_data = OmindUserCar.query.filter_by(plate_no=r_data["plate_no"]).first()
+    if car_data:
+        car_data.owner = r_data['owner']
+        car_data.address = r_data['address']
         db.session.commit()  # 提交事务以保存更新
         status_code = 200
         result = {
@@ -73,43 +84,48 @@ def up_us_data(id):
 
 
 # 查
-@OmindUserCar.route('/car/info', methods=['GET'])
-def get_data_by_us_name():
-    car_id = request.args.get("id", type=int)
-    car_data = OmindUserCar.query.get(car_id)
+@car.route('/car/info', methods=['GET'])
+def get_car_info():
+    user_id = request.args.get("user_id", type=int)
+    plate_no = request.args.get("plate_no", type=str)
+    car_data = OmindUserCar.query.filter_by(user_id=user_id, plate_no=plate_no).first()
     if not car_data:
         status_code = 400
         result = {
             "msg": "Query failed! Please check the query username.",
-            "us_data": {},
+            "data": {},
             "code": status_code
         }
     else:
         status_code = 200
         result = {
             "msg": "Query successful.",
-            "car_data": car_data,
+            "data": car_data.to_json(),
             "code": status_code
         }
     return jsonify(result), status_code
 
 
 # 查
-@OmindUserCar.route('/car/list', methods=['GET'])
-def get_data_by_us_name():
-    car_list = OmindUserCar.query.get()
+@car.route('/car/list', methods=['GET'])
+def get_car_list():
+    car_id = request.args.get("user_id", type=int)
+    car_list = OmindUserCar.query.filter_by(user_id=car_id).all()
     if not car_list:
         status_code = 400
         result = {
-            "msg": "Query failed! Please check the query username.",
-            "car_data": {},
+            "msg": "Query failed!",
+            "data": {},
             "code": status_code
         }
     else:
         status_code = 200
+        list = []
+        for item in car_list:
+            list.append(item.to_json())
         result = {
             "msg": "Query successful.",
-            "car_list": car_list,
+            "data": list,
             "code": status_code
         }
     return jsonify(result), status_code

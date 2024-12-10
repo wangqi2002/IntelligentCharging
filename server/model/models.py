@@ -4,7 +4,17 @@ from sqlalchemy.dialects.mysql import SMALLINT, DECIMAL, BIGINT, INTEGER, TINYIN
 
 db = SQLAlchemy()
 
-class OmindApp(db.Model):
+
+class EntityBase(object):
+    def to_json(self):
+        fields = self.__dict__
+        if "_sa_instance_state" in fields:
+            del fields["_sa_instance_state"]
+
+        return fields
+
+
+class OmindApp(db.Model, EntityBase):
     __tablename__ = 'omind_app'
 
     id = Column(INTEGER(10), primary_key=True)
@@ -18,7 +28,8 @@ class OmindApp(db.Model):
     update_time = Column(DateTime, nullable=True, server_default=text("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"))
     del_flag = Column(TINYINT(3), nullable=True, server_default=text("'0'"))
 
-class OmindBill(db.Model):
+
+class OmindBill(db.Model, EntityBase):
     __tablename__ = 'omind_bill'
     __table_args__ = {'comment': '充电订单信息表'}
 
@@ -72,7 +83,8 @@ class OmindBill(db.Model):
     charge_type = Column(TINYINT(1), nullable=True, server_default=text("'1'"), comment='充电类型 1、充满;2、按金额充电')
     charge_money = Column(DECIMAL(6, 2), nullable=True, server_default=text("'0.00'"), comment='用户预计充电金额')
 
-class OmindConnector(db.Model):
+
+class OmindConnector(db.Model, EntityBase):
     __tablename__ = 'omind_connector'
     __table_args__ = {'comment': '充电设备接口信息表'}
 
@@ -111,7 +123,8 @@ class OmindConnector(db.Model):
     create_time = Column(DateTime, nullable=True, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
 
-class OmindEquipment(db.Model):
+
+class OmindEquipment(db.Model, EntityBase):
     __tablename__ = 'omind_equipment'
     __table_args__ = {'comment': '充电设备信息表'}
 
@@ -146,7 +159,8 @@ class OmindEquipment(db.Model):
     create_time = Column(DateTime, nullable=True, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
 
-class OmindFeedback(db.Model):
+
+class OmindFeedback(db.Model, EntityBase):
     __tablename__ = 'omind_feedback'
     __table_args__ = {'comment': '用户反馈表'}
 
@@ -165,7 +179,8 @@ class OmindFeedback(db.Model):
     create_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
 
-class OmindOperator(db.Model):
+
+class OmindOperator(db.Model, EntityBase):
     __tablename__ = 'omind_operator'
     __table_args__ = {'comment': '基础设施运营商信息表'}
 
@@ -194,7 +209,8 @@ class OmindOperator(db.Model):
     create_time = Column(DateTime, nullable=True, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
 
-class OmindPrice(db.Model):
+
+class OmindPrice(db.Model, EntityBase):
     __tablename__ = 'omind_price'
     __table_args__ = {'comment': '充电价格表'}
 
@@ -211,7 +227,8 @@ class OmindPrice(db.Model):
     del_flag = Column(TINYINT(3), nullable=True, server_default=text("'0'"), comment='数据状态:0、正常;1、删除')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
 
-class OmindStation(db.Model):
+
+class OmindStation(db.Model, EntityBase):
     __tablename__ = 'omind_station'
     __table_args__ = {'comment': '充电站信息表'}
 
@@ -268,7 +285,8 @@ class OmindStation(db.Model):
     create_time = Column(DateTime, nullable=True, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
 
-class OmindStationImage(db.Model):
+
+class OmindStationImage(db.Model, EntityBase):
     __tablename__ = 'omind_station_images'
     __table_args__ = {'comment': '充电站图片表'}
 
@@ -285,7 +303,8 @@ class OmindStationImage(db.Model):
     create_time = Column(DateTime, nullable=True, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
 
-class OmindUser(db.Model):
+
+class OmindUser(db.Model, EntityBase):
     __tablename__ = 'omind_user'
     __table_args__ = {'comment': '用户表'}
 
@@ -294,8 +313,8 @@ class OmindUser(db.Model):
     mobile = Column(VARCHAR(11), nullable=False, index=True, server_default=text("''"), comment='用户手机号')
     nick_name = Column(VARCHAR(80), nullable=True, server_default=text("'koko'"), comment='用户昵称')
     wechat_name = Column(VARCHAR(255), nullable=True, server_default=text("'kokoko'"), comment='微信昵称')
-    password = Column(VARCHAR(20), nullable=False, server_default=text("''"),
-                        comment='当且仅当该移动应用已获得该用户的 userinfo 授权时，才会出现该字段')
+    password = Column(VARCHAR(20), nullable=False, server_default=text("123456"),
+                      comment='当且仅当该移动应用已获得该用户的 userinfo 授权时，才会出现该字段')
     openid_wx = Column(VARCHAR(128), nullable=True, server_default=text("''"), comment='小程序openID')
     unionid_ali = Column(VARCHAR(128), nullable=True, server_default=text("''"), comment='ali统一id')
     openid_ali = Column(VARCHAR(128), nullable=True, server_default=text("''"), comment='支付宝用户唯一标识')
@@ -322,20 +341,21 @@ class OmindUser(db.Model):
     create_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"), comment='创建时间')
     tenant_id = Column(VARCHAR(20), server_default=text("'000000'"), comment='租户编号')
 
-class OmindUserCar(db.Model):
+
+class OmindUserCar(db.Model, EntityBase):
     __tablename__ = 'omind_user_car'
     __table_args__ = {'comment': '用户的车辆'}
 
     id = Column(BIGINT(20), primary_key=True, comment='车辆ID')
     user_id = Column(BIGINT(20), nullable=True, index=True, server_default=text("'0'"), comment='用户ID')
     plate_no = Column(VARCHAR(10), nullable=True, index=True, server_default=text("''"), comment='车牌号')
-    car_vin = Column(VARCHAR(18), nullable=True, index=True, server_default=text("''"), comment='车辆vin码')
-    engine_no = Column(VARCHAR(32), nullable=True, server_default=text("''"), comment='发动机号码')
-    vehicle_type = Column(VARCHAR(32), nullable=True, server_default=text("''"), comment='车辆类型')
-    car_model = Column(VARCHAR(64), nullable=True, server_default=text("''"), comment='品牌型号')
-    owner = Column(VARCHAR(64), nullable=True, server_default=text("''"), comment='车辆所有人')
-    address = Column(VARCHAR(64), nullable=True, server_default=text("''"), comment='住址')
-    use_character = Column(VARCHAR(8), nullable=True, server_default=text("''"), comment='使用性质:运营、非运营')
+    car_vin = Column(VARCHAR(18), nullable=True, index=True, server_default=text("'7143k2934ns'"), comment='车辆vin码')
+    engine_no = Column(VARCHAR(32), nullable=True, server_default=text("'yk184619333880'"), comment='发动机号码')
+    vehicle_type = Column(VARCHAR(32), nullable=True, server_default=text("'轿车'"), comment='车辆类型')
+    car_model = Column(VARCHAR(64), nullable=True, server_default=text("'hongqi'"), comment='品牌型号')
+    owner = Column(VARCHAR(64), nullable=True, server_default=text("'dake'"), comment='车辆所有人')
+    address = Column(VARCHAR(64), nullable=True, server_default=text("'广东省珠海市'"), comment='住址')
+    use_character = Column(VARCHAR(8), nullable=True, server_default=text("'非运营'"), comment='使用性质:运营、非运营')
     register_date = Column(Date, comment='注册日期(格式"yyyy-MM-dd")')
     issue_date = Column(Date, comment='发证日期(格式"yyyy-MM-dd")')
     license_imgs = Column(TEXT, comment='行驶证图片json串')

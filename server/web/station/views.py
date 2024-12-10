@@ -4,7 +4,7 @@ from model.models import db, OmindUserCar
 
 
 # 增
-@OmindUserCar.route('/car/create', methods=['POST'])
+@station.route('/car/create', methods=['POST'])
 def add_us_data_by_json():
     add_us_data = request.get_json()
     try:
@@ -27,7 +27,7 @@ def add_us_data_by_json():
 
 
 # 删
-@OmindUserCar.route('/car/delete/<id>', methods=['DELETE'])
+@station.route('/car/delete/<id>', methods=['DELETE'])
 def delete_us_data(id):
     user = OmindUserCar.query.get(int(id))  # 通过 id 查询
     if user:
@@ -49,7 +49,7 @@ def delete_us_data(id):
 
 
 # 改
-@OmindUserCar.route('/car/changeIfon/<id>', methods=['PUT'])
+@station.route('/car/changeIfon/<id>', methods=['PUT'])
 def up_us_data(id):
     add_us_data = request.get_json()
     user = OmindUserCar.query.get(int(id))
@@ -73,7 +73,7 @@ def up_us_data(id):
 
 
 # 查
-@OmindUserCar.route('/car/info', methods=['GET'])
+@station.route('/car/info', methods=['GET'])
 def get_data_by_us_name():
     car_id = request.args.get("id", type=int)
     car_data = OmindUserCar.query.get(car_id)
@@ -95,7 +95,7 @@ def get_data_by_us_name():
 
 
 # 查
-@OmindUserCar.route('/car/list', methods=['GET'])
+@station.route('/car/list', methods=['GET'])
 def get_data_by_us_name():
     car_list = OmindUserCar.query.get()
     if not car_list:

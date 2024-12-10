@@ -4,11 +4,12 @@ from model.models import db, OmindUser
 from utils import util
 from store import globalfile
 
+
 @user.route('/user/register', methods=['POST'])
 def register():
-    us_data = request.get_json()
+    r_data = request.get_json()
     try:
-        new_us = OmindUser(mobile=us_data['mobile'], email=us_data['email'])
+        new_us = OmindUser(mobile=r_data['mobile'], password=r_data['password'])
         db.session.add(new_us)
         db.session.commit()  # 提交事务以保存到数据库
         status_code = 200
@@ -25,17 +26,20 @@ def register():
         }
     return jsonify(result), status_code
 
+
 # 短信登陆
 @user.route('/user/smsLogin', methods=['POST'])
-def smsLogin():
-    us_data = request.get_json()
+def sms_login():
+    r_data = request.get_json()
     try:
-        us_account = us_data['account']
-        us_captcha = us_data['captcha']
-        us_data = OmindUser.query.filter_by(account=us_account)
+        us_account = r_data['account']
+        us_captcha = r_data['captcha']
+        us_data = OmindUser.query.filter_by(mobile=us_account).first()
+        if us_data:
+            us_data = us_data.to_json()
         if us_captcha == globalfile.CAPTCHA:
             if not us_data:
-                new_us = OmindUser(mobile=us_data['mobile'], password=us_data['password'])
+                new_us = OmindUser(mobile=r_data['account'])
                 db.session.add(new_us)
                 db.session.commit()  # 提交事务以保存到数据库
                 status_code = 200
@@ -68,12 +72,12 @@ def smsLogin():
 
 # 账号密码登陆
 @user.route('/user/accountLogin', methods=['POST'])
-def accountLogin():
-    us_data = request.get_json()
+def account_login():
+    r_data = request.get_json()
     try:
-        us_account = us_data['account']
-        us_pass = us_data['pass']
-        us_data = OmindUser.query.filter_by(account=us_account)
+        us_account = r_data['account']
+        us_pass = r_data['password']
+        us_data = OmindUser.query.filter_by(mobile=us_account).first()
         if not us_data:
             status_code = 400
             result = {
@@ -81,7 +85,7 @@ def accountLogin():
                 "code": status_code
             }
         else:
-            if us_pass == us_data['pass']:
+            if us_pass == us_data.to_json()['password']:
                 status_code = 200
                 result = {
                     "msg": "login successful.",
@@ -105,78 +109,72 @@ def accountLogin():
 
 # 获取验证码
 @user.route('/user/sendCode', methods=['GET'])
-def sendCode(phone):
+def send_code():
     us_mobile = request.args.get("mobile", type=str)
-    us_data = OmindUser.query.get(us_mobile)
-    if not us_data:
-        status_code = 400
-        result = {
-            "msg": "Query failed! Please check the phone number.",
-            "code": status_code
-        }
-    else:
-        # 调用验证码发送接口，目前无验证码发送接口，使用伪验证码替代
-        globalfile.update_var(util.v_code())
-        captcha=globalfile.CAPTCHA
-        status_code = 200
-        result = {
-            "msg": "captcha successful.",
-            "captcha": captcha,
-            "code": status_code
-        }
-    return jsonify(result), status_code
+    # 调用验证码发送接口，目前无验证码发送接口，使用伪验证码替代
+    globalfile.update_var(util.v_code())
+    captcha = globalfile.CAPTCHA
+    status_code = 200
+    result = {
+        "msg": "captcha successful.",
+        "captcha": captcha,
+        "code": status_code
+    }
+    return jsonify(result)
 
 
 # 修改个人信息
 @user.route('/user/changeInfo', methods=['POST'])
-def changeInfo():
-    add_us_data = request.get_json()
+def change_info():
+    r_data = request.get_json()
     try:
-        new_user = OmindUser(username=add_us_data['username'], email=add_us_data['email'])
-        db.session.add(new_user)
-        db.session.commit()  # 提交事务以保存到数据库
+        OmindUser.query.filter(mobile=r_data.account).update(
+            {"nick_name": r_data.nick_name, "sex": r_data.sex, "city": r_data.city})
+        db.session.commit()
         status_code = 200
         result = {
-            "msg": "Add successful.",
+            "msg": "Update successful.",
             "code": status_code
         }
     except:
         db.session.rollback()
         status_code = 400
         result = {
-            "msg": "Add failed! Please check the query data.",
+            "msg": "Update failed! Please check the query data.",
             "code": status_code
         }
     return jsonify(result), status_code
 
-#修改密码
+
+# 修改密码
 @user.route('/user/changePass', methods=['POST'])
-def changePass():
-    add_us_data = request.get_json()
+def change_pass():
+    r_data = request.get_json()
     try:
-        new_user = OmindUser(username=add_us_data['username'], email=add_us_data['email'])
-        db.session.add(new_user)
-        db.session.commit()  # 提交事务以保存到数据库
+        OmindUser.query.filter(mobile=r_data.account).update(
+            {"password": r_data.password})
+        db.session.commit()
         status_code = 200
         result = {
-            "msg": "Add successful.",
+            "msg": "Updated successful.",
             "code": status_code
         }
     except:
         db.session.rollback()
         status_code = 400
         result = {
-            "msg": "Add failed! Please check the query data.",
+            "msg": "Update failed! Please check the query data.",
             "code": status_code
         }
-    return jsonify(result), status_code
+    return jsonify(result)
+
 
 # 上传头像
 @user.route('/user/uploadAvatar', methods=['POST'])
-def uploadAvatar():
-    add_us_data = request.get_json()
+def upload_avatar():
+    r_data = request.get_json()
     try:
-        new_user = OmindUser(username=add_us_data['username'], email=add_us_data['email'])
+        new_user = OmindUser(username=r_data['username'], email=r_data['email'])
         db.session.add(new_user)
         db.session.commit()  # 提交事务以保存到数据库
         status_code = 200
@@ -196,10 +194,9 @@ def uploadAvatar():
 
 # 获取个人信息
 @user.route('/user/info', methods=['GET'])
-def getInfo():
+def get_info():
     us_mobile = request.args.get("mobile", type=str)
-    us_data = OmindUser.query.filter_by(mobile=us_mobile)
-    print(us_mobile)
+    us_data = OmindUser.query.filter_by(mobile=us_mobile).first()
     if not us_data:
         status_code = 400
         result = {
@@ -210,10 +207,10 @@ def getInfo():
         status_code = 200
         result = {
             "msg": "Query successful.",
-            "us_data": us_data,
+            "data": us_data.to_json(),
             "code": status_code
         }
-    return jsonify(result), status_code
+    return jsonify(result)
 
 # # 删
 # @user.route('/delete_us_data/<id>', methods=['DELETE'])
