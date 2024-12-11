@@ -6,6 +6,7 @@ from web.car import car
 from web.gun import gun
 from web.order import order
 from web.station import station
+from web.communication import communication
 
 
 def create_app():
@@ -20,6 +21,7 @@ def create_app():
     app.register_blueprint(order, url_prefix='/api/app')
     app.register_blueprint(station, url_prefix='/api/app')
     app.register_blueprint(gun, url_prefix='/api/app')
+    app.register_blueprint(communication, url_prefix='/api/app')
     db.init_app(app)
     with app.app_context():
         db.create_all()
