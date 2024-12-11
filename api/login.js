@@ -22,10 +22,10 @@ export function resetByMobile(params) {
  export function userLogin(params){
   return http.request({
     method: "POST",
-    url:`/passport/member/userLogin`,
+    url:`/api/app/user/accountLogin`,
     data: params,
     header: {
-      "content-type": "application/x-www-form-urlencoded",
+      "content-type": "application/json",
     },
   })
 }
@@ -53,7 +53,7 @@ export function smsLogin(params, clientType) {
     method: "POST",
     data: params,
     header: {
-      "content-type": "application/x-www-form-urlencoded",
+      "content-type": "application/json",
       clientType: clientType,
     },
   });

@@ -48,7 +48,7 @@
 
 			<!-- 帐号密码登录 -->
 			<div v-show="enableUserPwdBox">
-				<u-input :custom-style="inputStyle" :placeholder-style="placeholderStyle" placeholder="请输入用户名" class="mobile" focus v-model="userData.username" />
+				<u-input :custom-style="inputStyle" :placeholder-style="placeholderStyle" placeholder="请输入用户名" class="mobile" focus v-model="userData.account" />
 				<u-input
 					:custom-style="inputStyle"
 					:placeholder-style="placeholderStyle"
@@ -135,7 +135,7 @@ export default {
 				}
 			],
 			userData: {
-				username: '',
+				account: '',
 				password: ''
 			},
 			showBack: false,
@@ -286,7 +286,7 @@ export default {
 		},
 		userData: {
 			handler(val) {
-				if (this.userData.username && this.userData.password) {
+				if (this.userData.account && this.userData.password) {
 					this.enableUserBtnColor = true;
 				} else {
 					this.enableUserBtnColor = false;
@@ -540,8 +540,7 @@ export default {
 
 		// 登录成功之后获取用户信息
 		getUserInfoMethods(res) {
-			console.log(res);
-			if (res.data.success) {
+			if (res.data.code == 200) {
 				//测试
 				storage.setAccessToken(myP.token);
 				storage.setRefreshToken(myP.token);
@@ -554,15 +553,15 @@ export default {
 				 */
 
 				//测试
-				storage.setUserInfo(myP.userInfo);
-				storage.setHasLogin(true);
-				uni.showToast({
-					title: '登录成功!',
-					icon: 'none'
-				});
-				whetherNavigate();
+				// storage.setUserInfo(myP.userInfo);
+				// storage.setHasLogin(true);
+				// uni.showToast({
+				// 	title: '登录成功!',
+				// 	icon: 'none'
+				// });
+				// whetherNavigate();
 
-				/* getUserInfo().then((user) => {
+				getUserInfo().then((user) => {
 					if (user.data.success) {
 						storage.setUserInfo(user.data.result);
 						storage.setHasLogin(true);
@@ -578,7 +577,7 @@ export default {
 							url: '/pages/tabbar/home/index'
 						});
 					}
-				}); */
+				});
 			}
 		},
 
@@ -618,7 +617,7 @@ export default {
 			console.log(this.codeColor);
 		},
 
-		passwordLogin() {
+		async passwordLogin() {
 			if (!this.enablePrivacy) {
 				uni.showToast({
 					title: '请同意用户隐私',
@@ -628,7 +627,7 @@ export default {
 				return false;
 			}
 
-			if (!this.userData.username) {
+			if (!this.userData.account) {
 				uni.showToast({
 					title: '请填写用户名',
 					duration: 2000,
@@ -646,10 +645,17 @@ export default {
 				return false;
 			}
 
-			if (!this.flage) {
-				this.$refs.verification.error(); //发送
-
-				return false;
+			const params = JSON.parse(JSON.stringify(this.userData));
+			try {
+				console.log(params)
+				let res = await userLogin(params);
+				console.log(res)
+				if (res.data.code == 200) {
+					console.log('zhixing ');
+					this.getUserInfoMethods(res);
+				}
+			} catch (error) {
+				console.log(error)
 			}
 		},
 
@@ -659,9 +665,9 @@ export default {
 			params.password = md5(params.password);
 
 			//测试
-			this.getUserInfoMethods({ data: { success: true } }); //res.data.success
+			// this.getUserInfoMethods({ data: { success: true } }); //res.data.success
 
-			/* try {
+			try {
 				let res = await userLogin(params);
 				if (res.data.success) {
 					console.log('zhixing ');
@@ -672,7 +678,7 @@ export default {
 				}
 			} catch (error) {
 				this.$refs.verification.getCode();
-			} */
+			}
 		},
 
 		// 发送验证码

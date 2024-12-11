@@ -51,7 +51,7 @@ export function sendFindPasswordSms(uuid, captcha) {
   return http.request({
     url: "passport/find-pwd/send",
     method: Method.POST,
-    header: { "content-type": "application/x-www-form-urlencoded" },
+    header: { "content-type": "application/json" },
     data: {
       uuid: uuid,
       captcha,
@@ -87,7 +87,7 @@ export function changePassword(password, uuid) {
   return http.request({
     url: "passport/find-pwd/update-password",
     method: Method.PUT,
-    header: { "content-type": "application/x-www-form-urlencoded" },
+    header: { "content-type": "application/json" },
     data: {
       uuid,
       password: md5(password),

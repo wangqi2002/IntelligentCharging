@@ -102,7 +102,7 @@ http.interceptors.request.use(
       ...params,
       ..._params,
     };
-    config.params = params;
+    // config.params = params;
 
     let accessToken = storage.getAccessToken();
     if (accessToken) {
@@ -133,7 +133,7 @@ http.interceptors.response.use(
     //   cleanStorage();
     //   isRefreshing = false;
     // }
-
+	console.log("request",response)
     let token = storage.getAccessToken();
     if (
       (token && response.statusCode === 403) ||

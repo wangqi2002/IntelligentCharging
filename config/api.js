@@ -4,13 +4,13 @@
  */
 // 开发环境
 const dev = {
-  common: "http://plat.trytowish.cn/prod-api",
-  baseFacility: "http://plat.trytowish.cn/prod-api/aio",
+  common: "http://127.0.0.1:8089",
+  baseFacility: "http://127.0.0.1:8089",
 };
 // 生产环境
 const prod = {
-  common: "http://plat.trytowish.cn/prod-api",
-  baseFacility: "http://plat.trytowish.cn/prod-api/aio",
+  common: "http://127.0.0.1:8089",
+  baseFacility: "http://127.0.0.1:8089",
 };
 
 //默认生产环境

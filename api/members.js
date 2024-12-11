@@ -40,9 +40,9 @@ export function getFeedbackInfo(id) {
 /**
  * 获取用户信息
  */
-export function fetchUserInfo() {
+export function getUserInfo() {
   return http.request({
-    url: `/mp/v1/auth/info`,
+    url: `/api/app/user/info`,
     method: Method.GET,
     needToken: true,
   });
