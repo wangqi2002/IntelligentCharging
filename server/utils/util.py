@@ -11,3 +11,9 @@ def v_code():
         s = str(random.choice([num,letter,Letter]))
         ret += s
     return ret
+
+def back_list(obj):
+    list=[]
+    for item in obj:
+        list.append(item.to_json())
+    return list

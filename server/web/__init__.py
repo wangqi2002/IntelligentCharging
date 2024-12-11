@@ -17,9 +17,9 @@ def create_app():
     # 注册蓝图
     app.register_blueprint(user, url_prefix='/api/app')
     app.register_blueprint(car, url_prefix='/api/app')
-    # app.register_blueprint(gun, url_prefix='/api/app')
-    # app.register_blueprint(order, url_prefix='/api/app')
-    # app.register_blueprint(station, url_prefix='/api/app')
+    app.register_blueprint(order, url_prefix='/api/app')
+    app.register_blueprint(station, url_prefix='/api/app')
+    app.register_blueprint(gun, url_prefix='/api/app')
     db.init_app(app)
     with app.app_context():
         db.create_all()

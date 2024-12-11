@@ -5,7 +5,7 @@ from utils import util
 from store import globalfile
 
 
-# 增
+# 增加车辆
 @car.route('/car/create', methods=['POST'])
 def add_car():
     r_data = request.get_json()
@@ -36,11 +36,11 @@ def add_car():
     return jsonify(result)
 
 
-# 删
+# 删除车辆
 @car.route('/car/delete', methods=['POST'])
 def delete_car():
     r_data = request.get_json()
-    car_data = OmindUserCar.query.filter_by(plate_no=r_data["plate_no"]).first()  # 通过 id 查询
+    car_data = OmindUserCar.query.filter_by(plate_no=r_data["plate_no"]).first()
     if car_data:
         db.session.delete(car_data)
         db.session.commit()  # 提交事务以删除记录
@@ -59,7 +59,7 @@ def delete_car():
     return jsonify(result)
 
 
-# 改
+# 修改车辆信息
 @car.route('/car/changeInfo', methods=['POST'])
 def up_car():
     r_data = request.get_json()
@@ -80,10 +80,10 @@ def up_car():
             "msg": "Updated failed! Please check the query data.",
             "code": status_code
         }
-    return jsonify(result), status_code
+    return jsonify(result)
 
 
-# 查
+# 获取车辆详细信息
 @car.route('/car/info', methods=['GET'])
 def get_car_info():
     user_id = request.args.get("user_id", type=int)
@@ -103,10 +103,10 @@ def get_car_info():
             "data": car_data.to_json(),
             "code": status_code
         }
-    return jsonify(result), status_code
+    return jsonify(result)
 
 
-# 查
+# 获取车辆列表
 @car.route('/car/list', methods=['GET'])
 def get_car_list():
     car_id = request.args.get("user_id", type=int)
@@ -128,4 +128,4 @@ def get_car_list():
             "data": list,
             "code": status_code
         }
-    return jsonify(result), status_code
+    return jsonify(result)

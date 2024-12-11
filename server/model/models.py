@@ -19,9 +19,9 @@ class OmindApp(db.Model, EntityBase):
 
     id = Column(INTEGER(10), primary_key=True)
     app_type = Column(INTEGER(10), nullable=True, server_default=db.text("'0'"), comment='0 openAPI 1 奥升小程序')
-    app_name = Column(VARCHAR(64), nullable=True, server_default=text("''"), comment='应用名')
-    app_key = Column(VARCHAR(32), nullable=True, server_default=text("''"), comment='应用key')
-    secret = Column(VARCHAR(64), nullable=True, server_default=text("''"), comment='应用密钥')
+    app_name = Column(VARCHAR(64), nullable=True, server_default=text("'智充'"), comment='应用名')
+    app_key = Column(VARCHAR(32), nullable=True, server_default=text("'uuid8172947266'"), comment='应用key')
+    secret = Column(VARCHAR(64), nullable=True, server_default=text("'9ksgg26688hsy5'"), comment='应用密钥')
     valid_time = Column(BIGINT(20), nullable=True, server_default=text("'253402271999'"), comment='有效期')
     state = Column(TINYINT(4), nullable=True, server_default=text("'0'"), comment='启用标记0未启用 1启用')
     create_time = Column(DateTime, nullable=True, server_default=text("CURRENT_TIMESTAMP"))
@@ -34,18 +34,18 @@ class OmindBill(db.Model, EntityBase):
     __table_args__ = {'comment': '充电订单信息表'}
 
     id = Column(BIGINT(20), primary_key=True, comment='自增id')
-    station_id = Column(VARCHAR(20), nullable=True, index=True, server_default=text("''"),
+    station_id = Column(VARCHAR(20), nullable=True, index=True, server_default=text("'11122221111'"),
                         comment='充电站id(运营商自定义的唯一编码)')
-    base_operator_id = Column(VARCHAR(10), nullable=True, server_default=text("''"),
+    base_operator_id = Column(VARCHAR(10), nullable=True, server_default=text("'1qwasa1122'"),
                               comment='基础平台运营商id(组织机构代码)')
-    start_charge_seq = Column(VARCHAR(32), nullable=True, index=True, server_default=text("''"),
+    start_charge_seq = Column(VARCHAR(32), nullable=True, index=True, server_default=text("'asferwe32343532'"),
                               comment='格式"运营商ID+唯一编号",27字符')
-    connector_id = Column(VARCHAR(26), nullable=True, index=True, server_default=text("''"),
+    connector_id = Column(VARCHAR(26), nullable=True, index=True, server_default=text("'1wed12qws'"),
                           comment='充电设备接口编码(充电设备接口编码，同一运营商内唯一)')
-    start_charge_seq_stat = Column(TINYINT(3), nullable=True, server_default=text("'0'"),
+    start_charge_seq_stat = Column(TINYINT(3), nullable=True, server_default=text("'1'"),
                                    comment='充电订单状态:1、启动中;2、充电中;3、停止中;4、已结束;5、未知;8、异常订单;20、已处理异常订单')
     user_id = Column(BIGINT(20), nullable=True, server_default=text("'0'"), comment='充电者用户id')
-    start_time = Column(DateTime, index=True, comment='开始充电时间(格式"yyyy-MM-dd HH:mm:ss")')
+    start_time = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"), index=True,  comment='开始充电时间(格式"yyyy-MM-dd HH:mm:ss")')
     end_time = Column(DateTime, index=True, comment='结束充电时间(格式"yyyy-MM-dd HH:mm:ss")')
     total_power = Column(DECIMAL(6, 2), nullable=True, server_default=text("'0.00'"),
                          comment='累计充电量(单位:度,小数点后2位)')
@@ -63,10 +63,9 @@ class OmindBill(db.Model, EntityBase):
                               comment='停止失败原因:0、无;1、此设备不存在;2、此设备离线;3、设备已停止充电;4~99、自定义')
     sum_period = Column(TINYINT(3), nullable=True, server_default=text("'0'"), comment='时段数N，范围：0～32')
     charge_detail = Column(TEXT, comment='交易信息 json')
-    car_vin = Column(VARCHAR(18), nullable=True, server_default=text("''"), comment='车辆识别码')
+    car_vin = Column(VARCHAR(18), nullable=True, server_default=text("'kk87786612334'"), comment='车辆识别码')
     plate_no = Column(VARCHAR(10), nullable=True, server_default=text("''"), comment='车牌号')
     succ_stat = Column(TINYINT(3), nullable=True, server_default=text("'0'"), comment='成功标识:0、成功;1、失败;')
-    bill_type = Column(TINYINT(3), comment='订单类型 0扫码充电 1刷卡充电')
     soc = Column(DECIMAL(6, 2), nullable=True, server_default=text("'0.00'"), comment='电池剩余电量(默认:0)')
     pay_state = Column(TINYINT(3), nullable=True, server_default=text("'0'"), comment='是否支付:0、未支付;1、已支付;')
     remark = Column(VARCHAR(128), nullable=True, server_default=text("''"), comment='备注')
