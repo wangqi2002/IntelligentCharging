@@ -5,16 +5,13 @@ from utils import util
 from store import globalfile
 
 
-# 增加车辆
-@communication.route('/communication/create', methods=['POST'])
-def add_car():
+# 通信连接
+@communication.route('/communication/connect', methods=['POST'])
+def connect():
     r_data = request.get_json()
+
     try:
-        car_data = OmindUserCar.query.filter_by(plate_no=r_data['plate_no']).first()
-        if not car_data:
-            new_car = OmindUserCar(user_id=r_data['user_id'], plate_no=r_data['plate_no'],owner=r_data['owner'])
-            db.session.add(new_car)
-            db.session.commit()  # 提交事务以保存到数据库
+        if r_data:
             status_code = 200
             result = {
                 "msg": "Add successful.",
@@ -27,7 +24,6 @@ def add_car():
                 "code": status_code
             }
     except:
-        db.session.rollback()
         status_code = 400
         result = {
             "msg": "Add failed! Please check the query data.",
@@ -36,21 +32,17 @@ def add_car():
     return jsonify(result)
 
 
-# 删除车辆
-@communication.route('/communication/delete', methods=['POST'])
-def delete_car():
+# 运动控制
+@communication.route('/communication/control', methods=['POST'])
+def control():
     r_data = request.get_json()
-    car_data = OmindUserCar.query.filter_by(plate_no=r_data["plate_no"]).first()
-    if car_data:
-        db.session.delete(car_data)
-        db.session.commit()  # 提交事务以删除记录
+    if r_data:
         status_code = 200
         result = {
             "msg": "Delete successfully.",
             "code": status_code
         }
     else:
-        db.session.rollback()
         status_code = 400
         result = {
             "msg": "Delete failed! Please check the query data.",
@@ -59,22 +51,17 @@ def delete_car():
     return jsonify(result)
 
 
-# 修改车辆信息
-@communication.route('/communication/changeInfo', methods=['POST'])
-def up_car():
+# 归位操作
+@communication.route('/communication/home', methods=['POST'])
+def home():
     r_data = request.get_json()
-    car_data = OmindUserCar.query.filter_by(plate_no=r_data["plate_no"]).first()
-    if car_data:
-        car_data.owner = r_data['owner']
-        car_data.address = r_data['address']
-        db.session.commit()  # 提交事务以保存更新
+    if r_data:
         status_code = 200
         result = {
             "msg": "Updated successfully.",
             "code": status_code
         }
     else:
-        db.session.rollback()
         status_code = 400
         result = {
             "msg": "Updated failed! Please check the query data.",
@@ -83,49 +70,39 @@ def up_car():
     return jsonify(result)
 
 
-# 获取车辆详细信息
-@communication.route('/communication/info', methods=['GET'])
-def get_car_info():
-    user_id = request.args.get("user_id", type=int)
-    plate_no = request.args.get("plate_no", type=str)
-    car_data = OmindUserCar.query.filter_by(user_id=user_id, plate_no=plate_no).first()
-    if not car_data:
-        status_code = 400
+# 连接检测
+@communication.route('/communication/keeping', methods=['POST'])
+def keeping():
+    r_data = request.get_json()
+    if r_data:
+        status_code = 200
         result = {
-            "msg": "Query failed! Please check the query username.",
-            "data": {},
+            "msg": "Updated successfully.",
             "code": status_code
         }
     else:
-        status_code = 200
+        status_code = 400
         result = {
-            "msg": "Query successful.",
-            "data": car_data.to_json(),
+            "msg": "Updated failed! Please check the query data.",
             "code": status_code
         }
     return jsonify(result)
 
 
-# 获取车辆列表
-@communication.route('/communication/list', methods=['GET'])
-def get_car_list():
-    car_id = request.args.get("user_id", type=int)
-    car_list = OmindUserCar.query.filter_by(user_id=car_id).all()
-    if not car_list:
-        status_code = 400
+# 目标运动
+@communication.route('/communication/auto', methods=['POST'])
+def auto():
+    r_data = request.get_json()
+    if r_data:
+        status_code = 200
         result = {
-            "msg": "Query failed!",
-            "data": {},
+            "msg": "Updated successfully.",
             "code": status_code
         }
     else:
-        status_code = 200
-        list = []
-        for item in car_list:
-            list.append(item.to_json())
+        status_code = 400
         result = {
-            "msg": "Query successful.",
-            "data": list,
+            "msg": "Updated failed! Please check the query data.",
             "code": status_code
         }
     return jsonify(result)
