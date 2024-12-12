@@ -1,4 +1,6 @@
-import { http } from "@/utils/request.js";
+import {
+	http
+} from "@/utils/request.js";
 
 import api from "@/config/api.js";
 
@@ -7,11 +9,11 @@ import api from "@/config/api.js";
  * @param  mobile
  */
 export function resetByMobile(params) {
-  return http.request({
-    url: `/passport/member/resetByMobile`,
-    method: "POST",
-    params,
-  });
+	return http.request({
+		url: `/api/app/user/resetByMobile`,
+		method: "POST",
+		params,
+	});
 }
 
 /**
@@ -19,15 +21,15 @@ export function resetByMobile(params) {
  * @params  password
  * @params  username
  */
- export function userLogin(params){
-  return http.request({
-    method: "POST",
-    url:`/api/app/user/accountLogin`,
-    data: params,
-    header: {
-      "content-type": "application/json",
-    },
-  })
+export function userLogin(params) {
+	return http.request({
+		method: "POST",
+		url: `/api/app/user/accountLogin`,
+		data: params,
+		header: {
+			"content-type": "application/json",
+		},
+	})
 }
 
 
@@ -35,11 +37,15 @@ export function resetByMobile(params) {
  * 发送验证码
  * @param  mobile
  */
-export function sendMobile(mobile,type='LOGIN') {
-  return http.request({
-    url: `${api.common}/common/sms/${type}/${mobile}`,
-    method: "GET",
-  });
+export function sendMobile(params) {
+	return http.request({
+		url: `/api/app/user/sendCode`,
+		method: "GET",
+		data: params,
+		header: {
+			"content-type": "application/json",
+		},
+	});
 }
 
 /**
@@ -48,15 +54,15 @@ export function sendMobile(mobile,type='LOGIN') {
  * @param  smsCode
  */
 export function smsLogin(params, clientType) {
-  return http.request({
-    url: `/passport/member/smsLogin`,
-    method: "POST",
-    data: params,
-    header: {
-      "content-type": "application/json",
-      clientType: clientType,
-    },
-  });
+	return http.request({
+		url: `/api/app/user/smsLogin`,
+		method: "POST",
+		data: params,
+		header: {
+			"content-type": "application/json",
+			clientType: clientType,
+		},
+	});
 }
 
 /**
@@ -66,28 +72,28 @@ export function smsLogin(params, clientType) {
  */
 
 export function modifyPass(params) {
-  return http.request({
-    url: `/passport/member/modifyPass`,
-    method: "PUT",
-    params,
-  });
+	return http.request({
+		url: `/api/app/user/modifyPass`,
+		method: "PUT",
+		params,
+	});
 }
 
 /**
  * 刷新token
  */
 export function refreshTokenFn(refresh_token) {
-  return http.request({
-    url: `/passport/member/refresh/${refresh_token}`,
-    method: "GET",
-  });
+	return http.request({
+		url: `/api/app/user/refresh/${refresh_token}`,
+		method: "GET",
+	});
 }
 
 // 获取密码状态
-export function logout () {
-  return http.request({
-    url: '/passport/member/logout',
-    method: "POST",
-    needToken: true,
-  })
+export function logout() {
+	return http.request({
+		url: '/api/app/user/logout',
+		method: "POST",
+		needToken: true,
+	})
 }

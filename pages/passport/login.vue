@@ -43,6 +43,9 @@
 							{{ tips }}
 						</span>
 					</div>
+					<div class="fetch-btn">
+						<span @tap="save" :style="{ color: codeColor }">登陆</span>
+					</div>
 				</div>
 			</div>
 
@@ -313,7 +316,7 @@ export default {
 					} else {
 						// 向后端请求验证码
 						uni.showLoading({});
-						let res = await sendMobile(this.mobile);
+						let res = await sendMobile({ mobile: this.mobile });
 						uni.hideLoading();
 						// 这里此提示会被this.start()方法中的提示覆盖
 						if (res.data.success) {
@@ -529,8 +532,8 @@ export default {
 			 */
 			smsLogin(
 				{
-					mobile: this.mobile,
-					code: this.code
+					account: this.mobile,
+					captcha: this.code
 				},
 				this.clientType
 			).then((res) => {
@@ -561,9 +564,9 @@ export default {
 				// });
 				// whetherNavigate();
 
-				getUserInfo().then((user) => {
-					if (user.data.success) {
-						storage.setUserInfo(user.data.result);
+				getUserInfo({ mobile: res.config.data.account }).then((user) => {
+					if (user.data.code == 200) {
+						storage.setUserInfo(user.data.data);
 						storage.setHasLogin(true);
 						// 登录成功
 						uni.showToast({
@@ -647,15 +650,18 @@ export default {
 
 			const params = JSON.parse(JSON.stringify(this.userData));
 			try {
-				console.log(params)
 				let res = await userLogin(params);
-				console.log(res)
 				if (res.data.code == 200) {
-					console.log('zhixing ');
 					this.getUserInfoMethods(res);
+				} else {
+					uni.showToast({
+						title: '用户名或者密码错误',
+						duration: 2000,
+						icon: 'none'
+					});
 				}
 			} catch (error) {
-				console.log(error)
+				console.log(error);
 			}
 		},
 
@@ -670,11 +676,8 @@ export default {
 			try {
 				let res = await userLogin(params);
 				if (res.data.success) {
-					console.log('zhixing ');
 					this.getUserInfoMethods(res);
 				} else {
-					this.$refs.verification.getCode();
-					this.flage = false;
 				}
 			} catch (error) {
 				this.$refs.verification.getCode();
@@ -682,7 +685,7 @@ export default {
 		},
 
 		// 发送验证码
-		fetchCode() {
+		async fetchCode() {
 			if (!this.enablePrivacy) {
 				uni.showToast({
 					title: '请同意用户隐私',
@@ -700,24 +703,19 @@ export default {
 				});
 				return false;
 			}
-			if (this.tips == '重新获取验证码') {
-				uni.showLoading({
-					title: '加载中'
+			uni.showLoading({});
+			let res = await sendMobile({ mobile: this.mobile });
+			uni.hideLoading();
+			// 这里此提示会被this.start()方法中的提示覆盖
+			if (res.data.code == 200) {
+				this.current = 1;
+				this.code = res.data.captcha;
+			} else {
+				uni.showToast({
+					title: '获取验证码失败',
+					duration: 2000,
+					icon: 'none'
 				});
-				if (!this.codeFlag) {
-					let timer = setInterval(() => {
-						if (this.$refs.verification) {
-							this.$refs.verification.error(); //发送
-						}
-						clearInterval(timer);
-					}, 100);
-				}
-				uni.hideLoading();
-			}
-			if (!this.flage) {
-				this.$refs.verification.error(); //发送
-
-				return false;
 			}
 		}
 	}

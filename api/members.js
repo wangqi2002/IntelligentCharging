@@ -40,10 +40,11 @@ export function getFeedbackInfo(id) {
 /**
  * 获取用户信息
  */
-export function getUserInfo() {
+export function getUserInfo(params) {
   return http.request({
     url: `/api/app/user/info`,
     method: Method.GET,
+    data: params,
     needToken: true,
   });
 }
