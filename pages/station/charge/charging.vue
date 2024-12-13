@@ -132,7 +132,7 @@
 
 					<u-modal show-cancel-button v-model="yaokongChargeShow" @confirm="yaokongCharge" :confirm-color="lightColor" :async-close="true">
 						<view class="slot-content">
-							<rich-text :nodes="contentTip" style="text-align: center;"></rich-text>
+							<rich-text :nodes="contentTip" style="text-align: center"></rich-text>
 						</view>
 					</u-modal>
 				</view>
@@ -339,6 +339,7 @@ import { chargingP, stationP, stationIndexP } from '@/config/virtualData.js';
 /************接口API***************/
 import { getConnector, getStation } from '@/api/station.js';
 import { startCharge, stopCharge, getOrderDetail, setOrderNofity } from '@/api/order.js';
+import { conConnect, conAuto } from '@/api/communication.js';
 import Foundation from '@/utils/Foundation.js';
 import { serviceCall } from '@/utils/tools.js';
 import config from '@/config/config';
@@ -401,7 +402,8 @@ export default {
 			chargeDurInt: 0,
 			//缓存充电时间字符
 			chargeDurStr: '0',
-			shouldRetry: true
+			shouldRetry: true,
+			isPrepare: false
 		};
 	},
 	onUnload() {
@@ -467,6 +469,7 @@ export default {
 				}).exec();
 			}
 		});
+		this.robotConnect();
 	},
 	methods: {
 		updateCountStart() {
@@ -620,16 +623,23 @@ export default {
 			// 	}
 			// })
 			let res = { data: { data: {}, code: 500 } };
-			res.data.data = chargingP.orderInfoVo;
-			if (res.data.code == 200) {
+			if (!this.isPrepare) {
+				res.data.data = chargingP.orderInfoVo;
+				if (res.data.code == 200) {
+					this.orderInfo = Object.assign({ startChargeSeq: res.data.data.startChargeSeq }, { status: 3 });
+					this.$refs.uTips.show({ title: '启动成功', type: 'success' });
+					// 开始轮询状态变化
+					this.getChargeInfo();
+				} else {
+					this.$refs.uTips.show({ title: res.data.msg, type: 'error' });
+					this.yaokongChargeShow = true;
+					this.orderInfo.status = 2;
+				}
+			} else {
 				this.orderInfo = Object.assign({ startChargeSeq: res.data.data.startChargeSeq }, { status: 3 });
 				this.$refs.uTips.show({ title: '启动成功', type: 'success' });
 				// 开始轮询状态变化
 				this.getChargeInfo();
-			} else {
-				this.$refs.uTips.show({ title: res.data.msg, type: 'error' });
-				this.yaokongChargeShow = true;
-				this.orderInfo.status = 2;
 			}
 		},
 		/* charge() {
@@ -743,7 +753,8 @@ export default {
 				events: {
 					// 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
 					acceptCharging: function (data) {
-						console.log('---', data);
+						that.isPrepare = data.data.isPrepare;
+						console.log('-+-', data, that.isPrepare);
 					}
 				},
 				success: function (res) {
@@ -820,6 +831,11 @@ export default {
 			uni.setNavigationBarTitle({
 				title: title
 			});
+		},
+
+		async robotConnect() {
+			let res = await conConnect({ topic: '1212111221' });
+			console.log('connect--', res);
 		}
 	}
 };

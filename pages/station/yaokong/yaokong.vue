@@ -7,19 +7,19 @@
 			<video class="video-card" src="/static/video.mp4"></video>
 		</view>
 		<view class="control-wrapper">
-			<view class="control-btn control-top" @tap="singleAct(1)" @longpress="longAct(1)" @touchend="touchend"></view>
+			<view class="control-btn control-top" @tap="singleAct(0)" @longpress="longAct(0)" @touchend="touchend"></view>
 			<view class="control-btn control-left" @tap="singleAct(2)" @longpress="longAct(2)" @touchend="touchend"></view>
-			<view class="control-btn control-bottom" @tap="singleAct(3)" @longpress="longAct(3)" @touchend="touchend"></view>
-			<view class="control-btn control-right" @tap="singleAct(4)" @longpress="longAct(4)" @touchend="touchend"></view>
+			<view class="control-btn control-bottom" @tap="singleAct(1)" @longpress="longAct(1)" @touchend="touchend"></view>
+			<view class="control-btn control-right" @tap="singleAct(3)" @longpress="longAct(3)" @touchend="touchend"></view>
 			<view class="control-round" style="background-color: #ffffff">
-				<view class="control-round-up control-btn" @tap="singleAct(5)" @longpress="longAct(5)" @touchend="touchend"></view>
-				<view class="control-round-down control-btn" @tap="singleAct(6)" @longpress="longAct(6)" @touchend="touchend"></view>
+				<view class="control-round-up control-btn" @tap="singleAct(4)" @longpress="longAct(4)" @touchend="touchend"></view>
+				<view class="control-round-down control-btn" @tap="singleAct(5)" @longpress="longAct(5)" @touchend="touchend"></view>
 			</view>
 			<view class="control-rotate">
-				<view class="control-rotate-left control-rotate-btn" @tap="singleAct(7)" @longpress="longAct(7)" @touchend="touchend">
+				<view class="control-rotate-left control-rotate-btn" @tap="singleAct(6)" @longpress="longAct(6)" @touchend="touchend">
 					<img class="rotate-icon" src="/static/index/rotate-left.png" />
 				</view>
-				<view class="control-rotate-right control-rotate-btn" @tap="singleAct(8)" @longpress="longAct(8)" @touchend="touchend">
+				<view class="control-rotate-right control-rotate-btn" @tap="singleAct(7)" @longpress="longAct(7)" @touchend="touchend">
 					<img class="rotate-icon" src="/static/index/rotate-right.png" />
 				</view>
 			</view>
@@ -38,19 +38,19 @@ import { conConnect, conKeeping, conControl, conHome, conAuto } from '@/api/comm
 export default {
 	data() {
 		return {
-			timeOnline: null
+			timeOnline: null,
+			eventChannel
 		};
 	},
 	onLoad(options) {
 		console.log('yaokong', options);
-		const eventChannel = this.getOpenerEventChannel();
+		this.eventChannel = this.getOpenerEventChannel();
 		uni.$on('chargePreSucc', () => {
-			eventChannel.emit('acceptCharging', { data: 'charge prepare success' });
+			this.eventChannel.emit('acceptCharging', { data: { msg: 'charge prepare success', isPrepare: true } });
 		});
-		eventChannel.emit('acceptCharging', { data: 'data from test page' });
 		// 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
-		eventChannel.on('acceptChargingPage', function (data) {
-			console.log('+++', data);
+		this.eventChannel.on('acceptChargingPage', function (data) {
+			console.log('+++');
 		});
 	},
 	onShow() {},

@@ -7,6 +7,8 @@ from web.gun import gun
 from web.order import order
 from web.station import station
 from web.communication import communication
+from mqtt.mqtt_conncet import connect_mqtt
+from store import globalfile
 
 
 def create_app():
@@ -23,6 +25,7 @@ def create_app():
     app.register_blueprint(gun, url_prefix='/api/app')
     app.register_blueprint(communication, url_prefix='/api/app')
     db.init_app(app)
+    globalfile.update_client(connect_mqtt())
     with app.app_context():
         db.create_all()
     return app
