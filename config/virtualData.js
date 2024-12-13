@@ -599,7 +599,7 @@ let chargingP = {
 		equipmentId: "",
 		type: 1,
 		power: 200,
-		status: 4,
+		status: 2,
 		startChargeSeq: "xxxxxxxxxxxxx",
 		priceList: [{
 			startTm: "08:00",
@@ -627,7 +627,7 @@ let chargingP = {
 		baseOperatorId: 'MA80GFQM8',
 		startChargeSeq: 'MA01D1QR8900000000000000000',
 		connectorId: '2411010810000101',
-		status: 4,
+		status: 2,
 		userId: 2,
 		startTime: '2024-01-22 16:09:15',
 		endTime: '2024-01-22 16:09:42',
@@ -671,6 +671,7 @@ let chargingP = {
 		operatorName: "asas"
 	}
 }
+
 let myOrder = {
 	orderListVo: {
 		total: 3,

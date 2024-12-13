@@ -1,5 +1,7 @@
 import random
 
+moveTup = ({})
+
 #python随机生成包含字母数字的六位验证码
 def v_code():
     ret = ""

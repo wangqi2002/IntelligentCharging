@@ -7,19 +7,19 @@
 			<video class="video-card" src="/static/video.mp4"></video>
 		</view>
 		<view class="control-wrapper">
-			<view class="control-btn control-top" @click="act(1)"></view>
-			<view class="control-btn control-left" @click="act(2)"></view>
-			<view class="control-btn control-bottom" @click="act(3)"></view>
-			<view class="control-btn control-right" @click="act(4)"></view>
+			<view class="control-btn control-top" @tap="singleAct(1)" @longpress="longAct(1)" @touchend="touchend"></view>
+			<view class="control-btn control-left" @tap="singleAct(2)" @longpress="longAct(2)" @touchend="touchend"></view>
+			<view class="control-btn control-bottom" @tap="singleAct(3)" @longpress="longAct(3)" @touchend="touchend"></view>
+			<view class="control-btn control-right" @tap="singleAct(4)" @longpress="longAct(4)" @touchend="touchend"></view>
 			<view class="control-round" style="background-color: #ffffff">
-				<view class="control-round-up control-btn" @click="act(5)"></view>
-				<view class="control-round-down control-btn" @click="act(6)"></view>
+				<view class="control-round-up control-btn" @tap="singleAct(5)" @longpress="longAct(5)" @touchend="touchend"></view>
+				<view class="control-round-down control-btn" @tap="singleAct(6)" @longpress="longAct(6)" @touchend="touchend"></view>
 			</view>
 			<view class="control-rotate">
-				<view class="control-rotate-left control-rotate-btn" @click="act(7)">
+				<view class="control-rotate-left control-rotate-btn" @tap="singleAct(7)" @longpress="longAct(7)" @touchend="touchend">
 					<img class="rotate-icon" src="/static/index/rotate-left.png" />
 				</view>
-				<view class="control-rotate-right control-rotate-btn" @click="act(8)">
+				<view class="control-rotate-right control-rotate-btn" @tap="singleAct(8)" @longpress="longAct(8)" @touchend="touchend">
 					<img class="rotate-icon" src="/static/index/rotate-right.png" />
 				</view>
 			</view>
@@ -27,15 +27,19 @@
 		<view class="options-wrapper">
 			<button class="guiwei option-btn" @click="guiwei()">机器人归位</button>
 			<button class="confirm option-btn" @click="confirmCharge()">确认充电</button>
+			<!-- <button class="confirm option-btn" @tap="singleAct(1)" @longpress="longAct(1)" @touchend="touchend">确认充电</button> -->
 		</view>
 	</view>
 </template>
 <script>
 import menuData from '@/config/menuData.js';
+import { conConnect, conKeeping, conControl, conHome, conAuto } from '@/api/communication.js';
 
 export default {
 	data() {
-		return {};
+		return {
+			timeOnline: null
+		};
 	},
 	onLoad(options) {
 		console.log('yaokong', options);
@@ -53,15 +57,55 @@ export default {
 	onReady() {},
 	mounted() {},
 	methods: {
-		act(id) {
+		// 单击事件
+		async singleAct(id) {
 			console.log(id);
+			let res = await conControl({ orientation: id, topic: '122221212121212' });
+			console.log(res.data);
 		},
-		guiwei() {
+		// 长按事件
+		async longAct(id) {
+			let that = this;
+			that.timeOnline = setInterval(() => {
+				this.singleAct(id);
+			}, 200); // 200毫秒触发一次
+		},
+		async guiwei() {
 			console.log('充电枪归位接口');
+			let res = await conHome({ home: true, topic: '122221212121212' });
+			if (res.data.code == 200) {
+				uni.showToast({
+					title: '归位成功',
+					icon: 'none', //如果要纯文本，不要icon，将值设为'none'
+					duration: 2000 //持续时间为 2秒
+				});
+			} else {
+				uni.showToast({
+					title: '归位失败',
+					icon: 'error', //如果要纯文本，不要icon，将值设为'none'
+					duration: 2000 //持续时间为 2秒
+				});
+			}
 		},
-		confirmCharge() {
-			uni.$emit('chargePreSucc', 'success');
-			uni.navigateBack();
+		async confirmCharge() {
+			console.log('充电枪自动');
+			let res = await conAuto({ topic: '122221212121212' });
+			if (res.data.code == 200) {
+				uni.$emit('chargePreSucc', 'success');
+				uni.navigateBack();
+			} else {
+				uni.showToast({
+					title: '插入失败',
+					icon: 'none', //如果要纯文本，不要icon，将值设为'none'
+					duration: 2000 //持续时间为 2秒
+				});
+				this.guiwei();
+			}
+		},
+
+		// 长按结束了
+		touchend() {
+			clearInterval(this.timeOnline); // 清除计时器
 		}
 	}
 };

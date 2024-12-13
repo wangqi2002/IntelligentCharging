@@ -9,7 +9,6 @@ from store import globalfile
 @communication.route('/communication/connect', methods=['POST'])
 def connect():
     r_data = request.get_json()
-
     try:
         if r_data:
             status_code = 200
