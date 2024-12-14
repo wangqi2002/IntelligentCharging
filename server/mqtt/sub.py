@@ -7,7 +7,8 @@ from paho.mqtt import client as mqtt_client
 
 broker = 'broker.emqx.io'
 port = 1883
-topic = "python/mqtt"
+topic = "122221212121212"
+# topic = "python/mqtt"
 # generate client ID with pub prefix randomly
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 username = 'emqx'
@@ -45,3 +46,6 @@ def run():
     client = connect_mqtt()
     subscribe(client)
     client.loop_forever()
+
+if __name__ == '__main__':
+    run()

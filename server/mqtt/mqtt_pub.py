@@ -6,6 +6,7 @@ from paho.mqtt import client as mqtt_client
 
 # 订阅主题
 def publish(client,topic,msg):
+    client.loop_start()
     result = client.publish(topic, msg)
     # result: [0, 1]
     status = result[0]
@@ -13,6 +14,7 @@ def publish(client,topic,msg):
         print(f"Send `{msg}` to topic `{topic}`")
     else:
         print(f"Failed to send message to topic {topic}")
+    # client.loop_stop()
 
 # 断开连接
 def disconnect(client: mqtt_client):

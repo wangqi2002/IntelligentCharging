@@ -10,9 +10,9 @@ from mqtt import mqtt_pub, mqtt_sub
 @communication.route('/communication/connect', methods=['POST'])
 def connect():
     r_data = request.get_json()
-    mqtt_sub.subscribe(globalfile.CLIENT, r_data["topic"])
+    mqtt_sub.subscribe(globalfile.CLIENT1, r_data["topic"])
     mqtt_pub.publish(globalfile.CLIENT, r_data["topic"], "connect")
-    mqtt_sub.unsubscribe(globalfile.CLIENT, r_data["topic"])
+    # mqtt_sub.unsubscribe(globalfile.CLIENT1, r_data["topic"])
     try:
         if r_data:
             status_code = 200
@@ -39,10 +39,7 @@ def connect():
 @communication.route('/communication/control', methods=['POST'])
 def control():
     r_data = request.get_json()
-
-    mqtt_sub.subscribe(globalfile.CLIENT, r_data["topic"])
     mqtt_pub.publish(globalfile.CLIENT, r_data["topic"], str(util.moveTup[r_data["orientation"]]))
-    mqtt_sub.unsubscribe(globalfile.CLIENT, r_data["topic"])
     if r_data:
         status_code = 200
         result = {

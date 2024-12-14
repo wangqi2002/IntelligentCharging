@@ -11,9 +11,10 @@ def subscribe(client: mqtt_client,topic):
 
     client.subscribe(topic)
     client.on_message = on_message
-    return
+    # client.loop_start()
 
 # 取消订阅
 def unsubscribe(client: mqtt_client,topic):
-    client.on_message = None
+    # client.on_message = None
     client.unsubscribe(topic)
+    client.loop_stop()

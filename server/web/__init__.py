@@ -26,6 +26,8 @@ def create_app():
     app.register_blueprint(communication, url_prefix='/api/app')
     db.init_app(app)
     globalfile.update_client(connect_mqtt())
+    globalfile.update_client1(connect_mqtt())
+    print(globalfile.CLIENT == globalfile.CLIENT1)
     with app.app_context():
         db.create_all()
     return app
